@@ -8,6 +8,8 @@
   {
     "listing": "/reviews.html",
     "items": [
+      "/reviews/1234/index.html",
+      "/reviews/Clare copy/index.html",
       "/reviews/Clare/index.html"
     ]
   }
