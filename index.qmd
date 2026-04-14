@@ -1,12 +1,7 @@
 ---
 title: "SelianBlog"
-listing:
-  contents: posts
-  feed: true
-  sort: "date desc"
-  type: default
-  categories: true
-  sort-ui: false
-  filter-ui: false
+
 page-layout: full
 ---
+
+물리학 연구, 강화학습 연구, 논문 리뷰

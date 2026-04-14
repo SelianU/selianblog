@@ -18,7 +18,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Python deps
-        run: pip install jupyter
+        run: pip install jupyter pyyaml
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
