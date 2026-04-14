@@ -19,7 +19,7 @@ RL Applications
 ### ML Algorithms
 State($S_t$), Action($A_t$), Environment, Reward($R_{t+1}$)
 
-![RL](RL.png)
+![](RL.png)
 
 ## Markov Decision Process
 
@@ -133,6 +133,7 @@ v_\pi(s) &= E_\pi[G_t|S_t=s] \\
 \end{aligned}
 $$
 
+\
 <!-- -->
 
 $$
