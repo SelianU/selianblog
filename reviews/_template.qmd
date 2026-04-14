@@ -1,0 +1,23 @@
+---
+title: "논문 제목"
+author: "Selian"
+date: "2026-04-14"
+categories: []
+image: "image.jpg"
+description: "한 줄 요약"
+draft: true
+---
+
+## 논문 정보
+- **저자**: 
+- **학회/저널**: 
+- **연도**: 
+- **링크**: 
+
+## 핵심 질문
+
+## 방법론
+
+## 결과
+
+## 내 생각

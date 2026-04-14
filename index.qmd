@@ -1,7 +1,27 @@
 ---
 title: "SelianBlog"
-
 page-layout: full
+listing:
+  - id: recent-posts
+    contents: posts
+    sort: "date desc"
+    type: grid
+    max-items: 3
+    fields: [image, title, date]
+  - id: recent-reviews
+    contents: reviews
+    sort: "date desc"
+    type: grid
+    max-items: 3
+    fields: [image, title, date]
 ---
 
-물리학 연구, 강화학습 연구, 논문 리뷰
+연구와 논문 리뷰를 기록하는 블로그입니다.
+
+## Recent Posts
+:::{#recent-posts}
+:::
+
+## Recent Reviews
+:::{#recent-reviews}
+:::
