@@ -8,6 +8,11 @@ website:
   favicon: favicon.ico
   open-graph: true
   navbar:
+    left:
+      - text: "Posts"
+        href: posts.qmd
+      - text: "Reviews"
+        href: reviews.qmd
     right:
       - about.qmd
       - icon: github
@@ -19,6 +24,6 @@ format:
       - cosmo
       - brand
     css: styles.css
-    highlight-style: github-dark
+    highlight-style: nord
     code-fold: true
     toc: true

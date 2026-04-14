@@ -6,6 +6,30 @@ categories: [news, code, analysis]
 image: "image.jpg"
 ---
 
+```{python}
+a = 10
+b = 20
+print(a + b)
+```
+
+`{python} a` is ten.
+
+:::{.callout-note}
+내용
+:::
+
+::: {.panel-tabset}
+## Python
+```python
+import numpy as np
+```
+
+## Julia
+```julia
+using LinearAlgebra
+```
+:::
+
 ## Abstract 초록
 본 연구는 오프라인 역강화 학습(IRL)의 주요 난제인 _reward extrapolation error_(보상 외삽 오류)를 해결하고자 한다.
 

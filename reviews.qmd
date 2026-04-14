@@ -1,0 +1,8 @@
+---
+title: "Reviews"
+listing:
+  contents: reviews
+  type: default
+  sort: "date desc"
+  categories: true
+---
