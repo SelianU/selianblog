@@ -6,8 +6,8 @@
       version="2.0">
 <channel>
 <title>SelianBlog</title>
-<link>https://selianu.github.io/SelianBlog/post.html</link>
-<atom:link href="https://selianu.github.io/SelianBlog/post.xml" rel="self" type="application/rss+xml"/>
+<link>https://selianu.github.io/SelianBlog/posts.html</link>
+<atom:link href="https://selianu.github.io/SelianBlog/posts.xml" rel="self" type="application/rss+xml"/>
 <description>A blog built with Quarto</description>
 <generator>quarto-1.9.37</generator>
 <lastBuildDate>Tue, 14 Apr 2026 00:00:00 GMT</lastBuildDate>

@@ -77,8 +77,8 @@
     "text": "Conclusion\n본 논문은 학습된 보상 함수에 보수성을 통합하고 추정된 동역학 모델을 활용함으로써 (공변량 변화로 인한) 보상 외삽 오류에 접근하는 새로운 오프라인 IRL 알고리즘(CLARE)을 소개한다. 우리의 이론적 분석은 미묘한 이중적 활용-탐색 트레이드오프를 정량화하여 공변량 변화의 영향을 규명하며, CLARE가 그 안에서 올바른 트레이드오프를 맞춤으로써 보상 외삽 오류를 이론적으로 완화할 수 있음을 보여준다. 광범위한 실험을 통해 CLARE가 연속적이고 고차원적인 환경에서 기존 방법들보다 훨씬 뛰어난 성능을 보이며, 학습된 보상 함수가 과업의 선호를 잘 나타낸다는 것을 입증한다."
   },
   {
-    "objectID": "post.html",
-    "href": "post.html",
+    "objectID": "posts.html",
+    "href": "posts.html",
     "title": "Posts",
     "section": "",
     "text": "Conservative Model-Based Reward Learning for Offline Inverse Reinforcement Learning\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 14, 2026\n\n\nSelian\n\n\n\n\n\nNo matching items"
