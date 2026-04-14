@@ -8,8 +8,9 @@
 
 <meta name="author" content="Selian">
 <meta name="dcterms.date" content="2026-04-14">
+<meta name="description" content="Introduction, MDP, Bellman Equation">
 
-<title>Conservative Model-Based Reward Learning for Offline Inverse Reinforcement Learning – SelianBlog</title>
+<title>Reinforcement Learning 1 – SelianBlog</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -24,41 +25,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -113,12 +79,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Conservative Model-Based Reward Learning for Offline Inverse Reinforcement Learning – SelianBlog">
-<meta property="og:description" content="A blog built with Quarto">
-<meta property="og:image" content="https://selianu.github.io/SelianBlog/posts/Clare/image.jpg">
+<meta property="og:title" content="Reinforcement Learning 1 – SelianBlog">
+<meta property="og:description" content="Introduction, MDP, Bellman Equation">
+<meta property="og:image" content="https://selianu.github.io/SelianBlog/posts/Reinforcement Learning 1/RL.png">
 <meta property="og:site_name" content="SelianBlog">
+<meta property="og:image:height" content="143">
+<meta property="og:image:width" content="353">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -173,11 +170,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#abstract-초록" id="toc-abstract-초록" class="nav-link active" data-scroll-target="#abstract-초록">Abstract 초록</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
-  <li><a href="#핵심-의문점" id="toc-핵심-의문점" class="nav-link" data-scroll-target="#핵심-의문점">핵심 의문점</a></li>
+  <li><a href="#ml-algorithms" id="toc-ml-algorithms" class="nav-link" data-scroll-target="#ml-algorithms">ML Algorithms</a></li>
   </ul></li>
-  <li><a href="#introduction-소개" id="toc-introduction-소개" class="nav-link" data-scroll-target="#introduction-소개">Introduction 소개</a></li>
+  <li><a href="#markov-decision-process" id="toc-markov-decision-process" class="nav-link" data-scroll-target="#markov-decision-process">Markov Decision Process</a>
+  <ul class="collapse">
+  <li><a href="#grid-world" id="toc-grid-world" class="nav-link" data-scroll-target="#grid-world">Grid World</a></li>
+  <li><a href="#markov-property" id="toc-markov-property" class="nav-link" data-scroll-target="#markov-property">Markov Property</a></li>
+  <li><a href="#markov-decision-process-1" id="toc-markov-decision-process-1" class="nav-link" data-scroll-target="#markov-decision-process-1">Markov Decision Process</a></li>
+  <li><a href="#reward-policy" id="toc-reward-policy" class="nav-link" data-scroll-target="#reward-policy">Reward &amp; Policy</a></li>
+  </ul></li>
+  <li><a href="#bellman-equation" id="toc-bellman-equation" class="nav-link" data-scroll-target="#bellman-equation">Bellman Equation</a>
+  <ul class="collapse">
+  <li><a href="#bellman-equation-1" id="toc-bellman-equation-1" class="nav-link" data-scroll-target="#bellman-equation-1">Bellman Equation</a></li>
+  <li><a href="#optimal-policy" id="toc-optimal-policy" class="nav-link" data-scroll-target="#optimal-policy">Optimal Policy</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -186,14 +194,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Conservative Model-Based Reward Learning for Offline Inverse Reinforcement Learning</h1>
+<h1 class="title">Reinforcement Learning 1</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">news</div>
-    <div class="quarto-category">code</div>
-    <div class="quarto-category">analysis</div>
+    <div class="quarto-category">RL</div>
   </div>
   </div>
 
+<div>
+  <div class="description">
+    Introduction, MDP, Bellman Equation
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -220,69 +231,230 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="56abcae2" class="cell" data-execution_count="1">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">20</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a <span class="op">+</span> b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>30</code></pre>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>RL Applications</p>
+<ul>
+<li>Robotics &amp; Autonomous Driving</li>
+<li>Game AI</li>
+<li>Finance &amp; Training</li>
+<li>Recommendation System</li>
+<li>Optimization System</li>
+</ul>
+<section id="ml-algorithms" class="level3">
+<h3 class="anchored" data-anchor-id="ml-algorithms">ML Algorithms</h3>
+<p>State(<span class="math inline">\(S_t\)</span>), Action(<span class="math inline">\(A_t\)</span>), Environment, Reward(<span class="math inline">\(R_{t+1}\)</span>)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="RL.png" class="img-fluid figure-img"></p>
+<figcaption>RL</figcaption>
+</figure>
 </div>
-</div>
-<p>10 is ten.</p>
-<div class="callout callout-style-default callout-note callout-titled">
+</section>
+</section>
+<section id="markov-decision-process" class="level2">
+<h2 class="anchored" data-anchor-id="markov-decision-process">Markov Decision Process</h2>
+<section id="grid-world" class="level3">
+<h3 class="anchored" data-anchor-id="grid-world">Grid World</h3>
+<ul>
+<li>Deterministic grid world <code>vs</code> Stochastic grid world</li>
+</ul>
+</section>
+<section id="markov-property" class="level3">
+<h3 class="anchored" data-anchor-id="markov-property">Markov Property</h3>
+<p>Stochastic Process</p>
+<ul>
+<li>Discrete-time random process: <span class="math inline">\(S_0, S_1, \cdots, S_t, \cdots\)</span></li>
+<li>Continuous-time random process: <span class="math inline">\(\{S_t|t\ge0\}\)</span></li>
+<li>Markov Property: <span class="math inline">\(P(S_{t+1}=s'|S_t=s)=P(S_{t+1}=s'|S_0=s_0,S_1=s_1,\cdots,S_t=s_t)\)</span>
+<ul>
+<li><span class="math inline">\(S_{t+1}=s'\)</span> does not depend on past states.</li>
+</ul></li>
+</ul>
+<p>Markov Process <span class="math inline">\((S,P)\)</span> - <span class="math inline">\(S\)</span>: A finite set of states. - <span class="math inline">\(P\)</span>: A state transition probability matrix <span class="math inline">\([P_{ij}]\)</span>, <span class="math inline">\(P_{ij}=P(s_j|s_i) = P(S_{t+1}=s_j|S_t=s_i)\)</span> - Sum of row = 1</p>
+</section>
+<section id="markov-decision-process-1" class="level3">
+<h3 class="anchored" data-anchor-id="markov-decision-process-1">Markov Decision Process</h3>
+<ul>
+<li>MDP: <span class="math inline">\((S, A, P, R, \gamma)\)</span>
+<ul>
+<li><span class="math inline">\(S\)</span>: State space</li>
+<li><span class="math inline">\(A\)</span>: Action space</li>
+<li><span class="math inline">\(P\)</span>: State transition probability, <span class="math inline">\(P^{a}_{ss'} = p(s'|s,a) = P(S_{t+1}=s'|S_t=s,A_t=a)\)</span></li>
+<li><span class="math inline">\(R\)</span>: Reward function <span class="math inline">\(R_{ss'}^a,R_s,R^a_s\)</span></li>
+<li><span class="math inline">\(\gamma\in[0,1]\)</span>: Discount factor</li>
+</ul></li>
+<li>Model-based: known MDP</li>
+<li>Model-free: unknown MDP</li>
+</ul>
+<p>MDP <span class="math inline">\(\rightarrow\)</span> <span class="math inline">\(S\)</span> and <span class="math inline">\(A\)</span> continuous OK.</p>
+</section>
+<section id="reward-policy" class="level3">
+<h3 class="anchored" data-anchor-id="reward-policy">Reward &amp; Policy</h3>
+<section id="reward" class="level4">
+<h4 class="anchored" data-anchor-id="reward">Reward</h4>
+<ul>
+<li>Reward <span class="math inline">\(R_t\)</span>: scalar feedback</li>
+<li>Agent’s goal: maximize the cumulative sum of rewards</li>
+</ul>
+<blockquote class="blockquote">
+<p>All goals can be described by the maximization of the expected value of the cumulative sum of rewards. - Reward Hypothesis</p>
+</blockquote>
+<ul>
+<li>State Transition Probability
+<ul>
+<li><span class="math inline">\(P_{ss'}^a = p(s'|s,a) = P(S_{t+1}=s'|S_t=s,A_t=a) = \sum\limits_{r\in R}p(s',r|s,a)\)</span></li>
+</ul></li>
+<li>Expected Reward for State-Action Pair
+<ul>
+<li><span class="math inline">\(R_s^a = r(s,a) = E[R_{t+1}|S_t=s,A_t=a] = \sum\limits_{r\in R}r\sum\limits_{s'\in S}p(r|s,a)\)</span></li>
+</ul></li>
+<li>Expected Reward for State-Action-Next State Triple
+<ul>
+<li><span class="math inline">\(R_{ss'}^a = r(s,a,s') = E[R_{t+1}|S_t=s,A_t=a,S_{t+1}=s'] = \frac{\sum\limits_{r\in R}rp(r|s,a,s')}{p(s'|s,a)}\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="return" class="level4">
+<h4 class="anchored" data-anchor-id="return">Return</h4>
+<ul>
+<li>Return <span class="math inline">\(G_t\)</span>: total discounted reward</li>
+<li><span class="math inline">\(G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum\limits_{k=0}^{\infty}\gamma^k R_{t+k+1}\)</span></li>
+</ul>
+<p>MDP가 discount하는 이유 - Mathematically convenient, Accounts for uncertainty</p>
+</section>
+<section id="policy" class="level4">
+<h4 class="anchored" data-anchor-id="policy">Policy</h4>
+<ul>
+<li>A stochastic policy <span class="math inline">\(\pi(a|s) = P(A_t=a|S_t=s)\)</span></li>
+<li>A deterministic policy <span class="math inline">\(\pi(s) = a\)</span></li>
+</ul>
+<!-- -->
+<ul>
+<li>Under a known MDP, <span class="math inline">\(\pi_*(s)\)</span> exists.</li>
+<li>Under an unknown MDP, an <span class="math inline">\(\epsilon\)</span>-greedy policy is needed
+<ul>
+<li><span class="math inline">\(1-\epsilon\)</span>: Choose the optimal value</li>
+<li><span class="math inline">\(\epsilon\)</span>: Choose randomly</li>
+</ul></li>
+</ul>
+</section>
+<section id="summary-of-notations" class="level4">
+<h4 class="anchored" data-anchor-id="summary-of-notations">Summary of Notations</h4>
+<ul>
+<li><span class="math inline">\(\pi\)</span>: Policy</li>
+<li><span class="math inline">\(\pi(a|s)\)</span>: Stochastic policy</li>
+<li><span class="math inline">\(\pi(s)\)</span>: Deterministic policy</li>
+</ul>
+<!-- -->
+<ul>
+<li><span class="math inline">\(v_{\pi}(s)\)</span>: State-value function</li>
+<li><span class="math inline">\(v_*(s)\)</span>: Optimal state-value function</li>
+</ul>
+<!-- -->
+<ul>
+<li><span class="math inline">\(q_{\pi}(s,a)\)</span>: Action-value function</li>
+<li><span class="math inline">\(q_*(s,a)\)</span>: Optimal action-value function</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="bellman-equation" class="level2">
+<h2 class="anchored" data-anchor-id="bellman-equation">Bellman Equation</h2>
+<section id="bellman-equation-1" class="level3">
+<h3 class="anchored" data-anchor-id="bellman-equation-1">Bellman Equation</h3>
+<section id="value-functions" class="level4">
+<h4 class="anchored" data-anchor-id="value-functions">Value Functions</h4>
+<p>Goodness of each state <span class="math inline">\(s\)</span>(or <span class="math inline">\((s,a)\)</span>) when following policy <span class="math inline">\(\pi\)</span>, in terms fo the expectation of <span class="math inline">\(G_t\)</span>.</p>
+<ul>
+<li>State-Value function
+<ul>
+<li><span class="math inline">\(v_\pi(s) = E_\pi[G_t|S_t=s] = \sum\limits_a \pi(a|s)q(s,a)\)</span></li>
+</ul></li>
+<li>Action-Value function
+<ul>
+<li><span class="math inline">\(q_\pi(s,a) = E_\pi[G_t|S_t=s,A_t=a]\)</span></li>
+</ul></li>
+</ul>
+<!-- -->
+<ul>
+<li><span class="math inline">\(A_\pi(s,a) = q_\pi(s,a) - v_\pi(s)\)</span></li>
+</ul>
+</section>
+<section id="bellman-equation-2" class="level4">
+<h4 class="anchored" data-anchor-id="bellman-equation-2">Bellman Equation</h4>
+<p><span class="math display">\[
+\begin{aligned}
+v_\pi(s) &amp;= E_\pi[G_t|S_t=s] \\
+&amp;= \sum\limits_a E_\pi[G_t|S_t=s, A_t=a] \cdot P(A_t=a|S_t=s) \\
+&amp;= \sum\limits_a \pi(a|s) E_\pi[R_{t+1} + \gamma G_{t+1}|S_t=s, A_t=a] \\
+&amp;= \sum\limits_a \pi(a|s) E_\pi[R_{t+1} + \gamma G_{t+1}|S_t=s, A_t=a, R{t+1}=r, S_{t+1}=s'] \\ &amp;\qquad\qquad\qquad\cdot P(S_{t+1}=s', R_{t+1} = r|S_t=s, A_t=a) \\
+&amp;= \sum\limits_a \pi(a|s) \sum\limits_{s',r} p(s',r|s,a) \left[r + \gamma E_\pi[G_{t+1}|S_{t+1}=s']\right] \\
+&amp;= \sum\limits_a \pi(a|s) \sum\limits_{s',r}\left[rp(s',r|s,a) + \gamma E_\pi[G_{t+1}|S_{t+1}=s']\cdot p(s',r|s,a)\right] \\
+&amp;= \sum\limits_a \pi(a|s) \left[ R^a_s + \gamma\sum\limits_{s',r}p(s',r|s,a)v\pi(s') \right] \\
+&amp;= \sum\limits_a \pi(a|s) \left[r+\gamma\sum\limits_{s'}P^a_{ss'}v_\pi(s')\right] \\
+&amp;= \sum\limits_a \pi(a|s) E[R_{t+1} + \gamma v_\pi(S_{t+1})|S_t=s,A_t=a] \\
+&amp;= E[R_{t+1} + \gamma v_\pi(S_{t+1})|S_t=s]
+\end{aligned}
+\]</span></p>
+<!-- -->
+<p><span class="math display">\[
+\begin{aligned}
+q_\pi(s,a) &amp;= E_\pi[G_t|S_t=s, A_t=a] \\
+&amp;= \sum\limits_{s',r} p(s',r|s,a) \left[r + \gamma E_\pi [G_{t+1} | S_{t+1}=s']\right] \\
+&amp;= \sum\limits_{s',r} p(s',r|s,a) \left[r+\gamma\sum_{a'}\pi(a'|s')q(s',a')\right] \\
+&amp;= E_\pi\left[R_{t+1} + \gamma v_\pi(S_{t+1})|S_t=s,A_t=a\right] \\
+&amp;= E\left[R_{t+1} + \gamma E_\pi\left[q_\pi(S_{t+1}, A_{t+1})|S_{t+1}=s'\right]|S_t=s, A_t=a\right] \\
+&amp;= E\left[R_{t+1} + \gamma q_\pi(S_{t+1}, A_{t+1})|S_t=s, A_t=a\right]
+\end{aligned}
+\]</span></p>
+</section>
+</section>
+<section id="optimal-policy" class="level3">
+<h3 class="anchored" data-anchor-id="optimal-policy">Optimal Policy</h3>
+<section id="optimal-value-functions-and-policy" class="level4">
+<h4 class="anchored" data-anchor-id="optimal-value-functions-and-policy">Optimal Value Functions and Policy</h4>
+<ul>
+<li>Optimal state-value function: <span class="math inline">\(v_*(s) = \max\limits_\pi v_\pi(s)\)</span></li>
+<li>Optimal action-value function: <span class="math inline">\(q_*(s,a) = \max\limits_\pi q_\pi(s,a)\)</span></li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Theorem">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Note
+<span class="screen-reader-only">Important</span>Theorem
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>내용</p>
+<p>If <span class="math inline">\(\pi' \ge \pi\)</span>, <span class="math inline">\(v_{\pi'}(s) \ge v_\pi(s)\)</span> for all <span class="math inline">\(s\)</span></p>
+<p>Optimal policy <span class="math inline">\(\pi_* \ge \pi\)</span> for all <span class="math inline">\(\pi\)</span></p>
+<p><span class="math inline">\(v_{\pi_*}(s) = v_*(s)\)</span>, <span class="math inline">\(q_{\pi_*}(s,a) = q_*(s,a)\)</span></p>
 </div>
 </div>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Python</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Julia</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-<section id="abstract-초록" class="level2">
-<h2 class="anchored" data-anchor-id="abstract-초록">Abstract 초록</h2>
-<p>본 연구는 오프라인 역강화 학습(IRL)의 주요 난제인 <em>reward extrapolation error</em>(보상 외삽 오류)를 해결하고자 한다.</p>
-<p>이는 학습된 보상 함수가 과업을 올바르게 설명하지 못하고, 내재된 공변량 변화(covariate shift)로 인해 접하지 못한 환경에서 에이전트를 잘못된 길로 이끌 수 있는 문제이다.</p>
-<p>전문가 데이터와 품질이 낮은 다양한 데이터를 모두 활용하여, 본 연구에서는 학습된 보상 함수에 “보수성”을 추가하고 추정된 동역학 모델을 이용하여 오프라인 IRL을 효율적으로 해결하는 원칙에 기반하는 알고리즘(CLARE)을 고안했다.</p>
-<p>우리의 이론적 분석은 학습된 정책과 전문가 정책 간의 수익 격차에 대한 상한선을 제공하여, 이를 바탕으로 (전문가 데이터와 다양한 데이터 모두에 대한) “활용”과 (추정된 동역학 모델에 대한) “탐색” 사이의 미묘한 이중적 트레이드 오프를 검토함으로써 공변량 변화의 영향을 규명한다.</p>
-<p>우리는 CLARE가 적절한 ‘활용-탐색’ 균형을 맞춤으로써 보상 외삽 오류를 이론적으로 완화할 수 있음을 보여준다.</p>
-<p>광범위한 실험을 통해 MuJoCo 연속 제어 과업(특히 작은 오프라인 데이터셋의 경우)에서 CLARE가 기존의 최첨단 알고리즘들에 비해 상당한 성능 향상을 보임을 입증했으며, 학습된 보상은 추가적인 학습에 매우 유용하다는 것을 확인했다.</p>
-<section id="핵심-의문점" class="level3">
-<h3 class="anchored" data-anchor-id="핵심-의문점">핵심 의문점</h3>
-<ol type="1">
-<li>오프라인 역강화 학습이란?</li>
-<li>보상 외삽 오류란?</li>
-<li>공변량 변화란?</li>
-<li>“보수성(conservatism)”의 역할</li>
-<li>추정된 동역할 모델이란?</li>
-<li>활용-탐색 균형</li>
-</ol>
 </section>
-</section>
-<section id="introduction-소개" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-소개">Introduction 소개</h2>
-<p>IRL의 주요 목표는 시연으로부터 보상 함수를 학습하는 것이다. 일반적으로, 기존의 IRL 방법은 (비용이 많이 들거나 완전히 알려진 전이 모델을 요구하는) 광범위한 온라인 시행착오에 의존하며, 많은 실제 응용 분야에서 확장하는 데 어려움을 겪는다. 이 문제를 해결하기 위해, 본 논문은 온라인 상호작용 없이 이전에 수집된 데이터셋으로부터 학습하는 데 초점을 맞춘 오프라인 IRL을 연구한다. 오프라인 IRL은 수동으로 적절한 보상을 식별하기는 어렵지만 인간 시연의 과거 데이터셋을 쉽게 사용할 수 있는 안전에 민감한 응용 분야(예: 헬스케어, 자율 주행, 로보틱스 등)에서 엄청난 잠재력을 가진다. 특히, 학습된 보상 함수는 전문가의 의도를 간결하게 표현하기 때문에 정책 학습(예: 오프라인 모방 학습(IL))뿐만 아니라 더 넓은 범위의 응용 분야(예: 과업 설명 및 전이 학습)에도 유용하다. 본 연구는 오프라인 IRL의 주요 난제, 즉 보상 외삽 오류를 해결하는 것을 목표로 하며, 이는 학습된 보상 함수가 과업을 올바르게 설명하지 못하고 보지 못한 환경에서 에이전트를 잘못 이끌 수 있는 문제이다. 이 문제는 제한된 전문가 시연(expert demonstrations)에서 상태의 부분적인 커버리지(즉, 공변량 변화)와 보상에 대한 고차원적이고 표현력이 풍부한 함수 근사로 인해 발생한다. 이는 감독을 위한 강화 신호가 없고 내재된 보상의 모호성 때문에 더욱 악화된다. 사실, 가치 함수에서의 외삽 오류와 관련된 유사한 문제들은 오프라인 (순방향) RL에서 널리 관찰되어 왔다. 불행히도, 우리가 아는 한, 최근 일부 진전에도 불구하고 이 문제는 오프라인 IRL에서 아직 잘 이해되지 않고 있다. 따라서 본 논문이 답하고자 하는 핵심 질문은 “보상 외삽 오류를 효과적으로 개선할 수 있는 오프라인 IRL 알고리즘을 어떻게 고안할 것인가?”이다.</p>
-<p>우리는 이 질문에 대해, 공변량 변화에 대응하기 위해 상태-행동 공간의 커버리지를 강화하고자 (제한된) 고품질 전문가 데이터뿐만 아니라 (풍부할 수 있는) 저품질의 다양한 데이터를 활용하는, 원칙에 기반한 IRL 알고리즘인 CLARE(conservative model-based reward learning)를 소개한다. CLARE는 분포를 벗어난 상태(out-of-distribution)에서의 잘못된 유도를 완화하기 위해 학습된 보상에 보수성을 적절히 통합하고, 학습된 동역학 모델을 활용하여 보상 일반화 능력을 향상시킴으로써 위에서 언급한 문제를 해결한다. 더 구체적으로, CLARE는 보수적인 보상 업데이트와 안전한 정책 개선을 반복하며, 보상 함수는 가중치가 부여된 전문가 및 다양한 상태-행동에 대한 가치를 높이는 동시에 모델 롤아웃(model rollouts)으로부터 생성된 것들에는 신중하게 페널티를 부여하는 방식으로 업데이트된다. 그 결과, 이 방법은 전문가의 의도를 담아내면서도 분포를 벗어난 상태-행동을 보수적으로 평가할 수 있으며, 이는 결과적으로 정책이 데이터로 뒷받침되는 상태를 방문하고 전문가의 행동을 따르도록 장려하여 안전한 정책 탐색을 달성하게 한다.</p>
-<p>기술적으로, CLARE가 섬세하게 조정해야 하는 매우 간단하지 않은 two-tier tradeoffs가 있다: 전문가 데이터와 다양한 데이터의 ’균형 잡힌 활용’과 추정된 모델의 ’탐색’이다. <img src="CLARE_Figure1.png" class="img-fluid"> 그림 1에 나타난 바와 같이, 첫 번째 트레이드오프는 CLARE가 보상을 추론하기 위해 전문가 시연을 활용하는 것과, 제한된 시연 데이터의 불충분한 상태-행동 커버리지로 인해 발생하는 공변량 변화를 처리하기 위해 다양한 데이터를 활용하는 것 모두에 의존하기 때문에 발생한다. 더 높은 수준에서, CLARE는 더 나은 일반화를 위해 오프라인 데이터 매니폴드(manifold)에서 벗어나고자 추정된 모델을 신중하게 탐색해야 한다. 이를 위해, 우리는 먼저 미묘한 이중적 활용-탐색 트레이드오프를 포착하기 위해 오프라인 데이터 포인트(상태-행동 쌍)에 대한 새로운 점별 가중치 매개변수(pointwise weight parameters)를 도입한다. 그 다음, 우리는 학습된 정책과 전문가 정책 간의 수익 격차에 대한 상한을 제공함으로써 성능에 미치는 영향을 엄밀하게 정량화한다. 이론적 정량화에 기초하여, 우리는 CLARE가 수익 격차를 최소화하기 위해 적절하게 균형을 맞출 수 있는 최적의 가중치 매개변수를 도출한다. 우리 연구는 CLARE를 통해 얻은 보상 함수가 전문가의 의도를 효과적으로 포착하고 오프라인 IRL에서 외삽 오류를 이론적으로 개선할 수 있음을 보여준다.</p>
+<section id="finding-an-optimal-policy" class="level4">
+<h4 class="anchored" data-anchor-id="finding-an-optimal-policy">Finding an Optimal Policy</h4>
+<p><span class="math display">\[
+\pi_*(s) = \begin{cases} 1 &amp; \text{if } a = \arg\max\limits_a q_*(s,a) \\ 0 &amp; \text{otherwise} \end{cases}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(v_*(s) = \max\limits_a q_*(s,a)\quad \because v_\pi(s) = \sum\limits_a\pi(a|s)q_\pi(s,a)\)</span></li>
+<li><span class="math inline">\(q_*(s,a) = r(s,a) + \gamma\sum\limits_{s'}p(s'|s,a)v_*(s')=R_s^a + \gamma\sum\limits_{s'}P^a_{ss'}v_*(s')\)</span></li>
+</ul>
+<!-- -->
+<ul>
+<li><span class="math inline">\(v_*(s)\)</span> can be obtained directly from <span class="math inline">\(q_*(s,a)\)</span></li>
+<li><span class="math inline">\(q_*(s,a)\)</span> cannot be obtained directly from <span class="math inline">\(v_*(s)\)</span>
+<ul>
+<li>Instead, we need to know the transition probability <span class="math inline">\(p(s'|s,a)\)</span>$ under model-based settings.</li>
+</ul></li>
+</ul>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->

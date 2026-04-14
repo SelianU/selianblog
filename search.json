@@ -4,63 +4,63 @@
     "href": "index.html",
     "title": "SelianBlog",
     "section": "",
-    "text": "물리학 연구, 강화학습 연구, 논문 리뷰"
+    "text": "연구와 논문 리뷰를 기록하는 블로그입니다."
   },
   {
-    "objectID": "posts/Clare/index.html",
-    "href": "posts/Clare/index.html",
-    "title": "Conservative Model-Based Reward Learning for Offline Inverse Reinforcement Learning",
+    "objectID": "index.html#recent-posts",
+    "href": "index.html#recent-posts",
+    "title": "SelianBlog",
+    "section": "Recent Posts",
+    "text": "Recent Posts\n\n\n\n\n\n\n\n\n\n\nReinforcement Learning 1\n\n\n\nApr 14, 2026\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html#recent-reviews",
+    "href": "index.html#recent-reviews",
+    "title": "SelianBlog",
+    "section": "Recent Reviews",
+    "text": "Recent Reviews\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/Reinforcement Learning 1/index.html",
+    "href": "posts/Reinforcement Learning 1/index.html",
+    "title": "Reinforcement Learning 1",
     "section": "",
-    "text": "Code\na = 10\nb = 20\nprint(a + b)\n\n\n30\n10 is ten."
+    "text": "RL Applications\n\nRobotics & Autonomous Driving\nGame AI\nFinance & Training\nRecommendation System\nOptimization System\n\n\n\nState(\\(S_t\\)), Action(\\(A_t\\)), Environment, Reward(\\(R_{t+1}\\))\n\n\n\nRL"
   },
   {
-    "objectID": "posts/Clare/index.html#abstract-초록",
-    "href": "posts/Clare/index.html#abstract-초록",
-    "title": "Conservative Model-Based Reward Learning for Offline Inverse Reinforcement Learning",
-    "section": "Abstract 초록",
-    "text": "Abstract 초록\n본 연구는 오프라인 역강화 학습(IRL)의 주요 난제인 reward extrapolation error(보상 외삽 오류)를 해결하고자 한다.\n이는 학습된 보상 함수가 과업을 올바르게 설명하지 못하고, 내재된 공변량 변화(covariate shift)로 인해 접하지 못한 환경에서 에이전트를 잘못된 길로 이끌 수 있는 문제이다.\n전문가 데이터와 품질이 낮은 다양한 데이터를 모두 활용하여, 본 연구에서는 학습된 보상 함수에 “보수성”을 추가하고 추정된 동역학 모델을 이용하여 오프라인 IRL을 효율적으로 해결하는 원칙에 기반하는 알고리즘(CLARE)을 고안했다.\n우리의 이론적 분석은 학습된 정책과 전문가 정책 간의 수익 격차에 대한 상한선을 제공하여, 이를 바탕으로 (전문가 데이터와 다양한 데이터 모두에 대한) “활용”과 (추정된 동역학 모델에 대한) “탐색” 사이의 미묘한 이중적 트레이드 오프를 검토함으로써 공변량 변화의 영향을 규명한다.\n우리는 CLARE가 적절한 ‘활용-탐색’ 균형을 맞춤으로써 보상 외삽 오류를 이론적으로 완화할 수 있음을 보여준다.\n광범위한 실험을 통해 MuJoCo 연속 제어 과업(특히 작은 오프라인 데이터셋의 경우)에서 CLARE가 기존의 최첨단 알고리즘들에 비해 상당한 성능 향상을 보임을 입증했으며, 학습된 보상은 추가적인 학습에 매우 유용하다는 것을 확인했다.\n\n핵심 의문점\n\n오프라인 역강화 학습이란?\n보상 외삽 오류란?\n공변량 변화란?\n“보수성(conservatism)”의 역할\n추정된 동역할 모델이란?\n활용-탐색 균형"
-  },
-  {
-    "objectID": "posts/Clare/index.html#introduction-소개",
-    "href": "posts/Clare/index.html#introduction-소개",
-    "title": "Conservative Model-Based Reward Learning for Offline Inverse Reinforcement Learning",
-    "section": "Introduction 소개",
-    "text": "Introduction 소개\nIRL의 주요 목표는 시연으로부터 보상 함수를 학습하는 것이다. 일반적으로, 기존의 IRL 방법은 (비용이 많이 들거나 완전히 알려진 전이 모델을 요구하는) 광범위한 온라인 시행착오에 의존하며, 많은 실제 응용 분야에서 확장하는 데 어려움을 겪는다. 이 문제를 해결하기 위해, 본 논문은 온라인 상호작용 없이 이전에 수집된 데이터셋으로부터 학습하는 데 초점을 맞춘 오프라인 IRL을 연구한다. 오프라인 IRL은 수동으로 적절한 보상을 식별하기는 어렵지만 인간 시연의 과거 데이터셋을 쉽게 사용할 수 있는 안전에 민감한 응용 분야(예: 헬스케어, 자율 주행, 로보틱스 등)에서 엄청난 잠재력을 가진다. 특히, 학습된 보상 함수는 전문가의 의도를 간결하게 표현하기 때문에 정책 학습(예: 오프라인 모방 학습(IL))뿐만 아니라 더 넓은 범위의 응용 분야(예: 과업 설명 및 전이 학습)에도 유용하다. 본 연구는 오프라인 IRL의 주요 난제, 즉 보상 외삽 오류를 해결하는 것을 목표로 하며, 이는 학습된 보상 함수가 과업을 올바르게 설명하지 못하고 보지 못한 환경에서 에이전트를 잘못 이끌 수 있는 문제이다. 이 문제는 제한된 전문가 시연(expert demonstrations)에서 상태의 부분적인 커버리지(즉, 공변량 변화)와 보상에 대한 고차원적이고 표현력이 풍부한 함수 근사로 인해 발생한다. 이는 감독을 위한 강화 신호가 없고 내재된 보상의 모호성 때문에 더욱 악화된다. 사실, 가치 함수에서의 외삽 오류와 관련된 유사한 문제들은 오프라인 (순방향) RL에서 널리 관찰되어 왔다. 불행히도, 우리가 아는 한, 최근 일부 진전에도 불구하고 이 문제는 오프라인 IRL에서 아직 잘 이해되지 않고 있다. 따라서 본 논문이 답하고자 하는 핵심 질문은 “보상 외삽 오류를 효과적으로 개선할 수 있는 오프라인 IRL 알고리즘을 어떻게 고안할 것인가?”이다.\n우리는 이 질문에 대해, 공변량 변화에 대응하기 위해 상태-행동 공간의 커버리지를 강화하고자 (제한된) 고품질 전문가 데이터뿐만 아니라 (풍부할 수 있는) 저품질의 다양한 데이터를 활용하는, 원칙에 기반한 IRL 알고리즘인 CLARE(conservative model-based reward learning)를 소개한다. CLARE는 분포를 벗어난 상태(out-of-distribution)에서의 잘못된 유도를 완화하기 위해 학습된 보상에 보수성을 적절히 통합하고, 학습된 동역학 모델을 활용하여 보상 일반화 능력을 향상시킴으로써 위에서 언급한 문제를 해결한다. 더 구체적으로, CLARE는 보수적인 보상 업데이트와 안전한 정책 개선을 반복하며, 보상 함수는 가중치가 부여된 전문가 및 다양한 상태-행동에 대한 가치를 높이는 동시에 모델 롤아웃(model rollouts)으로부터 생성된 것들에는 신중하게 페널티를 부여하는 방식으로 업데이트된다. 그 결과, 이 방법은 전문가의 의도를 담아내면서도 분포를 벗어난 상태-행동을 보수적으로 평가할 수 있으며, 이는 결과적으로 정책이 데이터로 뒷받침되는 상태를 방문하고 전문가의 행동을 따르도록 장려하여 안전한 정책 탐색을 달성하게 한다.\n기술적으로, CLARE가 섬세하게 조정해야 하는 매우 간단하지 않은 two-tier tradeoffs가 있다: 전문가 데이터와 다양한 데이터의 ’균형 잡힌 활용’과 추정된 모델의 ’탐색’이다.  그림 1에 나타난 바와 같이, 첫 번째 트레이드오프는 CLARE가 보상을 추론하기 위해 전문가 시연을 활용하는 것과, 제한된 시연 데이터의 불충분한 상태-행동 커버리지로 인해 발생하는 공변량 변화를 처리하기 위해 다양한 데이터를 활용하는 것 모두에 의존하기 때문에 발생한다. 더 높은 수준에서, CLARE는 더 나은 일반화를 위해 오프라인 데이터 매니폴드(manifold)에서 벗어나고자 추정된 모델을 신중하게 탐색해야 한다. 이를 위해, 우리는 먼저 미묘한 이중적 활용-탐색 트레이드오프를 포착하기 위해 오프라인 데이터 포인트(상태-행동 쌍)에 대한 새로운 점별 가중치 매개변수(pointwise weight parameters)를 도입한다. 그 다음, 우리는 학습된 정책과 전문가 정책 간의 수익 격차에 대한 상한을 제공함으로써 성능에 미치는 영향을 엄밀하게 정량화한다. 이론적 정량화에 기초하여, 우리는 CLARE가 수익 격차를 최소화하기 위해 적절하게 균형을 맞출 수 있는 최적의 가중치 매개변수를 도출한다. 우리 연구는 CLARE를 통해 얻은 보상 함수가 전문가의 의도를 효과적으로 포착하고 오프라인 IRL에서 외삽 오류를 이론적으로 개선할 수 있음을 보여준다."
-  },
-  {
-    "objectID": "reviews/Clare copy/index.html",
-    "href": "reviews/Clare copy/index.html",
-    "title": "CLARE",
+    "objectID": "posts/Reinforcement Learning 1/index.html#introduction",
+    "href": "posts/Reinforcement Learning 1/index.html#introduction",
+    "title": "Reinforcement Learning 1",
     "section": "",
-    "text": "Note\n\n\n\n내용\n\n\n\nPythonJulia\n\n\nimport numpy as np\n\n\nusing LinearAlgebra"
+    "text": "RL Applications\n\nRobotics & Autonomous Driving\nGame AI\nFinance & Training\nRecommendation System\nOptimization System\n\n\n\nState(\\(S_t\\)), Action(\\(A_t\\)), Environment, Reward(\\(R_{t+1}\\))\n\n\n\nRL"
   },
   {
-    "objectID": "posts.html",
-    "href": "posts.html",
-    "title": "Posts",
-    "section": "",
-    "text": "Conservative Model-Based Reward Learning for Offline Inverse Reinforcement Learning\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 14, 2026\n\n\nSelian\n\n\n\n\n\nNo matching items"
+    "objectID": "posts/Reinforcement Learning 1/index.html#markov-decision-process",
+    "href": "posts/Reinforcement Learning 1/index.html#markov-decision-process",
+    "title": "Reinforcement Learning 1",
+    "section": "Markov Decision Process",
+    "text": "Markov Decision Process\n\nGrid World\n\nDeterministic grid world vs Stochastic grid world\n\n\n\nMarkov Property\nStochastic Process\n\nDiscrete-time random process: \\(S_0, S_1, \\cdots, S_t, \\cdots\\)\nContinuous-time random process: \\(\\{S_t|t\\ge0\\}\\)\nMarkov Property: \\(P(S_{t+1}=s'|S_t=s)=P(S_{t+1}=s'|S_0=s_0,S_1=s_1,\\cdots,S_t=s_t)\\)\n\n\\(S_{t+1}=s'\\) does not depend on past states.\n\n\nMarkov Process \\((S,P)\\) - \\(S\\): A finite set of states. - \\(P\\): A state transition probability matrix \\([P_{ij}]\\), \\(P_{ij}=P(s_j|s_i) = P(S_{t+1}=s_j|S_t=s_i)\\) - Sum of row = 1\n\n\nMarkov Decision Process\n\nMDP: \\((S, A, P, R, \\gamma)\\)\n\n\\(S\\): State space\n\\(A\\): Action space\n\\(P\\): State transition probability, \\(P^{a}_{ss'} = p(s'|s,a) = P(S_{t+1}=s'|S_t=s,A_t=a)\\)\n\\(R\\): Reward function \\(R_{ss'}^a,R_s,R^a_s\\)\n\\(\\gamma\\in[0,1]\\): Discount factor\n\nModel-based: known MDP\nModel-free: unknown MDP\n\nMDP \\(\\rightarrow\\) \\(S\\) and \\(A\\) continuous OK.\n\n\nReward & Policy\n\nReward\n\nReward \\(R_t\\): scalar feedback\nAgent’s goal: maximize the cumulative sum of rewards\n\n\nAll goals can be described by the maximization of the expected value of the cumulative sum of rewards. - Reward Hypothesis\n\n\nState Transition Probability\n\n\\(P_{ss'}^a = p(s'|s,a) = P(S_{t+1}=s'|S_t=s,A_t=a) = \\sum\\limits_{r\\in R}p(s',r|s,a)\\)\n\nExpected Reward for State-Action Pair\n\n\\(R_s^a = r(s,a) = E[R_{t+1}|S_t=s,A_t=a] = \\sum\\limits_{r\\in R}r\\sum\\limits_{s'\\in S}p(r|s,a)\\)\n\nExpected Reward for State-Action-Next State Triple\n\n\\(R_{ss'}^a = r(s,a,s') = E[R_{t+1}|S_t=s,A_t=a,S_{t+1}=s'] = \\frac{\\sum\\limits_{r\\in R}rp(r|s,a,s')}{p(s'|s,a)}\\)\n\n\n\n\nReturn\n\nReturn \\(G_t\\): total discounted reward\n\\(G_t = R_{t+1} + \\gamma R_{t+2} + \\gamma^2 R_{t+3} + \\cdots = \\sum\\limits_{k=0}^{\\infty}\\gamma^k R_{t+k+1}\\)\n\nMDP가 discount하는 이유 - Mathematically convenient, Accounts for uncertainty\n\n\nPolicy\n\nA stochastic policy \\(\\pi(a|s) = P(A_t=a|S_t=s)\\)\nA deterministic policy \\(\\pi(s) = a\\)\n\n\n\nUnder a known MDP, \\(\\pi_*(s)\\) exists.\nUnder an unknown MDP, an \\(\\epsilon\\)-greedy policy is needed\n\n\\(1-\\epsilon\\): Choose the optimal value\n\\(\\epsilon\\): Choose randomly\n\n\n\n\nSummary of Notations\n\n\\(\\pi\\): Policy\n\\(\\pi(a|s)\\): Stochastic policy\n\\(\\pi(s)\\): Deterministic policy\n\n\n\n\\(v_{\\pi}(s)\\): State-value function\n\\(v_*(s)\\): Optimal state-value function\n\n\n\n\\(q_{\\pi}(s,a)\\): Action-value function\n\\(q_*(s,a)\\): Optimal action-value function"
+  },
+  {
+    "objectID": "posts/Reinforcement Learning 1/index.html#bellman-equation",
+    "href": "posts/Reinforcement Learning 1/index.html#bellman-equation",
+    "title": "Reinforcement Learning 1",
+    "section": "Bellman Equation",
+    "text": "Bellman Equation\n\nBellman Equation\n\nValue Functions\nGoodness of each state \\(s\\)(or \\((s,a)\\)) when following policy \\(\\pi\\), in terms fo the expectation of \\(G_t\\).\n\nState-Value function\n\n\\(v_\\pi(s) = E_\\pi[G_t|S_t=s] = \\sum\\limits_a \\pi(a|s)q(s,a)\\)\n\nAction-Value function\n\n\\(q_\\pi(s,a) = E_\\pi[G_t|S_t=s,A_t=a]\\)\n\n\n\n\n\\(A_\\pi(s,a) = q_\\pi(s,a) - v_\\pi(s)\\)\n\n\n\nBellman Equation\n\\[\n\\begin{aligned}\nv_\\pi(s) &= E_\\pi[G_t|S_t=s] \\\\\n&= \\sum\\limits_a E_\\pi[G_t|S_t=s, A_t=a] \\cdot P(A_t=a|S_t=s) \\\\\n&= \\sum\\limits_a \\pi(a|s) E_\\pi[R_{t+1} + \\gamma G_{t+1}|S_t=s, A_t=a] \\\\\n&= \\sum\\limits_a \\pi(a|s) E_\\pi[R_{t+1} + \\gamma G_{t+1}|S_t=s, A_t=a, R{t+1}=r, S_{t+1}=s'] \\\\ &\\qquad\\qquad\\qquad\\cdot P(S_{t+1}=s', R_{t+1} = r|S_t=s, A_t=a) \\\\\n&= \\sum\\limits_a \\pi(a|s) \\sum\\limits_{s',r} p(s',r|s,a) \\left[r + \\gamma E_\\pi[G_{t+1}|S_{t+1}=s']\\right] \\\\\n&= \\sum\\limits_a \\pi(a|s) \\sum\\limits_{s',r}\\left[rp(s',r|s,a) + \\gamma E_\\pi[G_{t+1}|S_{t+1}=s']\\cdot p(s',r|s,a)\\right] \\\\\n&= \\sum\\limits_a \\pi(a|s) \\left[ R^a_s + \\gamma\\sum\\limits_{s',r}p(s',r|s,a)v\\pi(s') \\right] \\\\\n&= \\sum\\limits_a \\pi(a|s) \\left[r+\\gamma\\sum\\limits_{s'}P^a_{ss'}v_\\pi(s')\\right] \\\\\n&= \\sum\\limits_a \\pi(a|s) E[R_{t+1} + \\gamma v_\\pi(S_{t+1})|S_t=s,A_t=a] \\\\\n&= E[R_{t+1} + \\gamma v_\\pi(S_{t+1})|S_t=s]\n\\end{aligned}\n\\]\n\n\\[\n\\begin{aligned}\nq_\\pi(s,a) &= E_\\pi[G_t|S_t=s, A_t=a] \\\\\n&= \\sum\\limits_{s',r} p(s',r|s,a) \\left[r + \\gamma E_\\pi [G_{t+1} | S_{t+1}=s']\\right] \\\\\n&= \\sum\\limits_{s',r} p(s',r|s,a) \\left[r+\\gamma\\sum_{a'}\\pi(a'|s')q(s',a')\\right] \\\\\n&= E_\\pi\\left[R_{t+1} + \\gamma v_\\pi(S_{t+1})|S_t=s,A_t=a\\right] \\\\\n&= E\\left[R_{t+1} + \\gamma E_\\pi\\left[q_\\pi(S_{t+1}, A_{t+1})|S_{t+1}=s'\\right]|S_t=s, A_t=a\\right] \\\\\n&= E\\left[R_{t+1} + \\gamma q_\\pi(S_{t+1}, A_{t+1})|S_t=s, A_t=a\\right]\n\\end{aligned}\n\\]\n\n\n\nOptimal Policy\n\nOptimal Value Functions and Policy\n\nOptimal state-value function: \\(v_*(s) = \\max\\limits_\\pi v_\\pi(s)\\)\nOptimal action-value function: \\(q_*(s,a) = \\max\\limits_\\pi q_\\pi(s,a)\\)\n\n\n\n\n\n\n\nImportantTheorem\n\n\n\nIf \\(\\pi' \\ge \\pi\\), \\(v_{\\pi'}(s) \\ge v_\\pi(s)\\) for all \\(s\\)\nOptimal policy \\(\\pi_* \\ge \\pi\\) for all \\(\\pi\\)\n\\(v_{\\pi_*}(s) = v_*(s)\\), \\(q_{\\pi_*}(s,a) = q_*(s,a)\\)\n\n\n\n\nFinding an Optimal Policy\n\\[\n\\pi_*(s) = \\begin{cases} 1 & \\text{if } a = \\arg\\max\\limits_a q_*(s,a) \\\\ 0 & \\text{otherwise} \\end{cases}\n\\]\n\n\\(v_*(s) = \\max\\limits_a q_*(s,a)\\quad \\because v_\\pi(s) = \\sum\\limits_a\\pi(a|s)q_\\pi(s,a)\\)\n\\(q_*(s,a) = r(s,a) + \\gamma\\sum\\limits_{s'}p(s'|s,a)v_*(s')=R_s^a + \\gamma\\sum\\limits_{s'}P^a_{ss'}v_*(s')\\)\n\n\n\n\\(v_*(s)\\) can be obtained directly from \\(q_*(s,a)\\)\n\\(q_*(s,a)\\) cannot be obtained directly from \\(v_*(s)\\)\n\nInstead, we need to know the transition probability \\(p(s'|s,a)\\)$ under model-based settings."
   },
   {
     "objectID": "reviews.html",
     "href": "reviews.html",
     "title": "Reviews",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Author\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nCLARE\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 14, 2026\n\n\nSelian\n\n\n\n\n\n\n\n\n\n\n\n\nCLARE\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 14, 2026\n\n\nSelian\n\n\n\n\n\n\n\n\n\n\n\n\nCLARE\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 14, 2026\n\n\nSelian\n\n\n\n\n\nNo matching items"
+    "text": "No matching items"
   },
   {
-    "objectID": "reviews/1234/index.html",
-    "href": "reviews/1234/index.html",
-    "title": "CLARE",
+    "objectID": "posts.html",
+    "href": "posts.html",
+    "title": "Posts",
     "section": "",
-    "text": "Note\n\n\n\n내용\n\n\n\nPythonJulia\n\n\nimport numpy as np\n\n\nusing LinearAlgebra"
-  },
-  {
-    "objectID": "reviews/Clare/index.html",
-    "href": "reviews/Clare/index.html",
-    "title": "CLARE",
-    "section": "",
-    "text": "Note\n\n\n\n내용\n\n\n\nPythonJulia\n\n\nimport numpy as np\n\n\nusing LinearAlgebra"
+    "text": "Reinforcement Learning 1\n\n\n\nRL\n\n\n\nIntroduction, MDP, Bellman Equation\n\n\n\n\n\nApr 14, 2026\n\n\nSelian\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
