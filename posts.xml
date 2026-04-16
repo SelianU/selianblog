@@ -288,24 +288,11 @@
 </section>
 <section id="value-iteration-pseudo-code" class="level4">
 <h4 class="anchored" data-anchor-id="value-iteration-pseudo-code">Value Iteration Pseudo Code</h4>
-<pre class="{pseudocode}"><code>#| label: alg-value-iteration
-#| alg-title: "Value Iteration for estimating $\\pi \\approx \\pi_*$"
-\begin{algorithmic}
-\item \textbf{Hyperparameter:} small threshold $\epsilon &gt; 0$ for the convergence check
-\item Initialize $V(s)$ arbitrarily for all $s \in \mathcal{S}$, except $V(\text{terminal}) = 0$
-
-\Repeat
-    \State $\Delta \gets 0$
-    \For{each $s \in \mathcal{S}$}
-        \State $v \gets V(s)$
-        \State $V(s) \gets \max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$
-        \State $\Delta \gets \max(\Delta, |v - V(s)|)$ 
-    \EndFor
-\Until{$\Delta &lt; \epsilon$} 
-
-\State \textbf{Output} a deterministic policy $\pi \approx \pi_*$ such that
-\State $\pi(s) = \arg\max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$
-\end{algorithmic}</code></pre>
+<div id="algo-value-iteration" class="pseudocode-container quarto-float" data-line-number="true" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-no-end="false" data-line-number-punc=":" data-pseudocode-number="1" data-indent-size="1.2em" data-indent-lines="false">
+<div class="pseudocode">
+\begin{algorithm} \caption{Value Iteration for estimating $\pi \approx \pi_*$} \begin{algorithmic} \State \textbf{Hyperparameter:} small threshold $\epsilon &gt; 0$ for the convergence check \State Initialize $V(s)$ arbitrarily for all $s \in \mathcal{S}$, except $V(\text{terminal}) = 0$ \Repeat \State $\Delta \gets 0$ \For{each $s \in \mathcal{S}$} \State $v \gets V(s)$ \State $V(s) \gets \max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \State $\Delta \gets \max(\Delta, |v - V(s)|)$ \EndFor \Until{$\Delta &lt; \epsilon$} \State \textbf{Output} a deterministic policy $\pi \approx \pi_*$ such that \State $\pi(s) = \arg\max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \end{algorithmic} \end{algorithm}
+</div>
+</div>
 </section>
 </section>
 <section id="policy-iteration" class="level3">
@@ -371,42 +358,11 @@
 </section>
 <section id="pseudo-code" class="level4">
 <h4 class="anchored" data-anchor-id="pseudo-code">Pseudo Code</h4>
-<pre class="{pseudocode}"><code>#| label: alg-policy-iteration
-#| alg-title: 'Policy Iteration for estimating $\pi \approx \pi_*$'
-
-\begin{algorithmic}
-\State \textbf{1. Initialization}
-\State $V(s) \in \mathbb{R}$ and $\pi(s) \in \mathcal{A}(s)$ arbitrarily for all $s \in \mathcal{S}$
-
-\State
-\State \textbf{2. Policy Evaluation}
-\Repeat
-    \State $\Delta \gets 0$
-    \For{each $s \in \mathcal{S}$}
-        \State $v \gets V(s)$
-        \State $V(s) \gets \sum_{s', r} p(s', r \mid s, \pi(s)) [r + \gamma V(s')]$
-        \State $\Delta \gets \max(\Delta, |v - V(s)|)$
-    \EndFor
-\Until{$\Delta &lt; \epsilon$}
-
-\State
-\State \textbf{3. Policy Improvement}
-\State $policy\_stable \gets \text{true}$
-\For{each $s \in \mathcal{S}$}
-    \State $old\_action \gets \pi(s)$
-    \State $\pi(s) \gets \arg\max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$
-    \If{$old\_action \neq \pi(s)$}
-        \State $policy\_stable \gets \text{false}$
-    \EndIf
-\EndFor
-
-\State
-\If{$policy\_stable$}
-    \State \textbf{stop} and return $V \approx v_*$ and $\pi \approx \pi_*$
-\Else
-    \State \textbf{go to 2}
-\EndIf
-\end{algorithmic}</code></pre>
+<div id="algo-policy-iteration" class="pseudocode-container quarto-float" data-line-number="true" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-no-end="false" data-line-number-punc=":" data-pseudocode-number="2" data-indent-size="1.2em" data-indent-lines="false">
+<div class="pseudocode">
+\begin{algorithm} \caption{Policy Iteration for estimating $\pi \approx \pi_*$} \begin{algorithmic} \State \textbf{1. Initialization} \State $V(s) \in \mathbb{R}$ and $\pi(s) \in \mathcal{A}(s)$ arbitrarily for all $s \in \mathcal{S}$ \State \State \textbf{2. Policy Evaluation} \Repeat \State $\Delta \gets 0$ \For{each $s \in \mathcal{S}$} \State $v \gets V(s)$ \State $V(s) \gets \sum_{s', r} p(s', r \mid s, \pi(s)) [r + \gamma V(s')]$ \State $\Delta \gets \max(\Delta, |v - V(s)|)$ \EndFor \Until{$\Delta &lt; \epsilon$} \State \State \textbf{3. Policy Improvement} \State $policy-stable \gets \text{true}$ \For{each $s \in \mathcal{S}$} \State $old-action \gets \pi(s)$ \State $\pi(s) \gets \arg\max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \If{$old-action \neq \pi(s)$} \State $policy-stable \gets \text{false}$ \EndIf \EndFor \State \If{$policy-stable$} \State \textbf{stop} and return $V \approx v_*$ and $\pi \approx \pi_*$ \Else \State \textbf{go to 2} \EndIf \end{algorithmic} \end{algorithm}
+</div>
+</div>
 </section>
 </section>
 <section id="summary" class="level3">
