@@ -3,7 +3,7 @@ title: "Reinforcement Learning 2"
 author: "Selian"
 date: "2026-04-14"
 categories: [RL]
-image: ""
+image: "GPI.png"
 description: "Dynamic Programming, Reinforcement Learning"
 ---
 
@@ -209,13 +209,143 @@ Finding an optimal policy by solving Bellman optimality equation requires
 #### DP vs RL
 - Dynamic Programming (DP)
 	- Planning under **model-based** setting using **full-backup**.
+	- Each iteration updates **every value** in the table using **full backup**.
+	- Usually, evaluate $V(s)$ rather than $Q(s,a)$.
+	- Greedy policy improvement over $V(s)$ **requires known MDP**.
+
+		- $$\pi_*(s) = \arg\max\limits_a\sum_{s',r} p(s',r | s,a) [r + \gamma V^*(s')]$$
 
 <!-- -->
 
 - Reinforcement Learning (RL)
-	- Learning under **model-free** setting using **sample backup**, and approximately solving the Bellman optimality equation.
+	- Learning under **model-free** setting using **sample backup**, and approximately solving the Bellman optimality equation.                 
         
 	-  Monte Carlo (MC) method
 	- Temporal Difference (TD) learnings
 		- Sarsa
 		- Q-learning
+
+	- Each iteration updates some values in the table from **sampl backup**.
+	- We evaluate $Q(s,a)$ instead of $V(s)$.
+	- Greedy policy improvement over $Q(s,a)$ **works for model-free settings:**
+
+		- $$\pi'(s)=\arg\max\limits_a Q^{\pi}(s,a)$$
+
+#### Generalized Policy Iteration (GPI)
+- **Policy Evaluation** makes the vlaue function "consistent with the current policy"
+- **Policy Improvement** makes the policy "greedy w.r.t. the current value function"
+![GPI](GPI.png)
+
+### Monte Carlo Methods
+
+#### Monte Carlo (MC)
+- Repeated random sampling to compute numerical results
+- Tabular updating and model-free method.
+
+- MC Policy Iteration adapts GPI based on episode-by-episode of PE estimating $Q(s,a)=q_\pi(s,a)$ and e-greedy PI.
+- MC learns from entire trajectory fo sampled episodes, updating after every single episode using real experience.
+
+$$\text{Value} = \text{average of returns } G_t \text{of sampled episodes}$$
+
+- MC focuses on a small subset of the states.
+- 이 방법은 'Successor value estimates'에 의존하지 않기 때문에 Markov property 위반으로 인한 피해가 적다.
+
+$$\Rightarrow\text{No bootstrapping}$$
+
+#### MC Prediction (Policy Evaluation)
+- Goal: learn $q_\pi$ from enitre episodes of real experience under policy $\pi$.
+- MC Policy Evaluation uses **empirical mean return** instead of expected return.
+
+- To estimate $q_\pi(s,a)$
+    1. For each time step $t$ when state $s$ is visited and action $a$ is taken:
+		- Increment count: $n(s,a) \gets n(s,a) + 1$
+		- Increment total return: $S(s,a) \gets S(s,a) + G_t$
+		- Estimate mean return: $Q(s,a) = S(s,a) / n(s,a)$
+- As $n(s,a) \to \infty$, $Q(s,a) \to q_\pi(s,a)$
+
+#### Incremental MC updates
+- Incremental Mean
+	- Partial mean $\mu_k$ of sequence $x_1, x_2, \ldots$ is computed incrementally
+	$$\mu_k = \frac{1}{k}\sum_{i=1}^k x_i = \mu_{k-1} + \frac{1}{k}(x_k - \mu_{k-1})$$
+
+- Incremental Monte Carlo Updates
+	- Increment count: $n(S_t, A_t) \gets n(S_t, A_t) + 1$
+	- Update rule: $Q(S_t, A_t) \gets Q(S_t, A_t) + \frac{1}{n(S_t, A_t)} [G_t - Q(S_t, A_t)]$
+
+#### constant $\alpha$ MC Policy Evaluation
+- In practice, a **step-size** $\alpha$ is used
+$$Q(S_t, A_t) \gets Q(S_t, A_t) + \alpha [G_t - Q(S_t, A_t)]$$
+
+- Old episodes are exponentially forgotten due to the $(1-\alpha)Q(S_t, A_t)$ term.
+
+#### Exploitation vs Exploration
+- **Exploitation**: making the best decision by using already known information
+	- By selecting the action with the highest Q-value while sampling new episodes, we can refine our policy efficiently from an alreadly promising region in the state-action space.
+- **Exploration**: searching for new decisions by gathering more information
+	- By selecting an extra random action while $\epsilon$-probability while sampling new episodes, we can find a new and maybe more promising region within the state-action space.
+
+- To trade-off Exploitation and Exploration, use **$\epsilon$-greedy policy**.
+
+#### MC Control ($\epsilon$-Greedy Policy Improvement)
+- Choose the greedy action with probability $1-\epsilon$ and a random action with probability $\epsilon$.
+$$\epsilon/m \text{ for each of all } m \text{ actions } \Rightarrow \text{stochastic policy}$$
+
+- All actions are selected with non-zero probability for ensuring continual exploration.
+$$\pi'(a|s) = \begin{cases}1 - \epsilon + \epsilon/m & \text{if } a=\arg\max_{a'}Q^\pi(s,a') \\ \epsilon/m & \text{otherwise } (m-1 \text{actions})\end{cases}$$
+
+- In full backup DP, Policy Improvement uses
+$$\pi'(s) = \arg\max_{a} Q^\pi(s,a) \Rightarrow \text{deterministic policy}$$
+
+- For any $\epsilon$-greedy policy $\pi$, $\epsilon$-greedy policy $\pi'$ with respect to $q_\pi$ is always improved: $v_{\pi'}\ge v_\pi(s)$
+
+#### Greedy in Limit with Infinite Exploration (GLIE)
+- All state-action pairs $(s,a)$ are explored infinitely many times:
+$$\lim\limits_{k\to\infty}n_k(s,a)=\infty$$
+
+- The learning policy converges to a greedy policy:
+$$\lim\limits_{k\to\infty}\pi_k(a|s) = 1 \text{ where } a = \arg\max\limits_{a'}Q_k(s,a')$$
+
+- GLIE MC Control: $\epsilon$-greedy is GLIE if $\epsilon_k\to 0$ as follows:
+    - In the $k$-th episode using policy $\pi$, for each state-action pair $(S_t,A_t)$:
+	$$n(S_t, A_t) \gets n(S_t, A_t) + 1Q(S_t, A_t) \gets Q(S_t, A_t) + \frac{1}{n(S_t, A_t)} [G_t - Q(S_t, A_t)]$$
+
+	- Improve policy based on the new action-value function:
+    $\epsilon=1/k,\pi\gets\epsilon\text{-greedy}(Q)$
+
+- GLIE MC Control converges to the optimal: $Q(s,a)\to q_*(s,a)$
+
+```pseudocode
+#| label: algo-monte-carlo-method
+#| html-line-number: true
+#| pdf-line-number: true
+
+\begin{algorithm}
+\caption{Monte Carlo Method}
+\begin{algorithmic}
+\State \textbf{1. Initialization}
+\State $Q(s,a)$, all $S\in\mathcal{S}$, $A\in\mathcal{A}(S)$, arbitrarily and $Q(\text{terminal}, \cdot) = 0$ 
+\State Returns $(S,A) \gets$ empty list
+\State $\pi \gets$ arbitrarily $\epsilon$-soft policy (non-empty probabilities)
+
+\State
+\State \textbf{2. Repeat for each episode}
+\Repeat
+	\State (a) Generate an episode using $\pi:S_0, A_0, R_1, S_1, \ldots, S_{T-1}, A_{T-1}, R_T$
+	\State $G\gets 0$
+	\State (b)
+	\For{each step of episode, $t=T-1, T-2, \ldots, 0$}
+		\State $G \gets \gamma G + R_{t+1}$
+		\State Unless $(S_t, A_t)$ appears in $(S_0, A_0), \ldots, (S_{t-1}, A_{t-1})$: ignore this lien for every-visit MC
+		\State Append $G$ to Returns $(S_t, A_t)$
+		\State $Q(S_t, A_T)\gets$ average(Returns$(S_t, A_t)$)
+	\EndFor
+	\For{each $S_t$ in the episode}
+		\State $A^*\gets\arg\max_{a}Q(S_t,a)$
+		\For{all $a\in\mathcal{A}(S_t)$}
+			\State $\pi(a|S_t) \gets \begin{cases}1-\epsilon + \epsilon/|\mathcal{A}(S_t)| & \text{if } a=A^* \\ \epsilon/|\mathcal{A}(S_t)| & \text{otherwise}\end{cases}$
+		\EndFor
+	\EndFor
+\Until{$\text{forever}$}
+\end{algorithmic}
+\end{algorithm}
+```
