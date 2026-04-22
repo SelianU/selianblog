@@ -139,7 +139,10 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Reinforcement Learning 2 – SelianBlog">
 <meta property="og:description" content="Dynamic Programming, Reinforcement Learning">
+<meta property="og:image" content="https://selianu.github.io/SelianBlog/posts/Reinforcement Learning 2/GPI.png">
 <meta property="og:site_name" content="SelianBlog">
+<meta property="og:image:height" content="574">
+<meta property="og:image:width" content="1691">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -203,6 +206,7 @@ window.Quarto = {
   <li><a href="#reinforcement-learning" id="toc-reinforcement-learning" class="nav-link" data-scroll-target="#reinforcement-learning">Reinforcement Learning</a>
   <ul class="collapse">
   <li><a href="#reinforcement-learning-1" id="toc-reinforcement-learning-1" class="nav-link" data-scroll-target="#reinforcement-learning-1">Reinforcement Learning</a></li>
+  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte Carlo Methods</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -297,7 +301,7 @@ window.Quarto = {
 </section>
 <section id="value-iteration-pseudo-code" class="level4">
 <h4 class="anchored" data-anchor-id="value-iteration-pseudo-code">Value Iteration Pseudo Code</h4>
-<div id="algo-value-iteration" class="pseudocode-container quarto-float" data-line-number="true" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-no-end="false" data-line-number-punc=":" data-pseudocode-number="1" data-indent-size="1.2em" data-indent-lines="false">
+<div id="algo-value-iteration" class="pseudocode-container quarto-float" data-line-number-punc=":" data-indent-lines="false" data-pseudocode-number="1" data-no-end="false" data-comment-delimiter="//" data-indent-size="1.2em" data-caption-prefix="Algorithm" data-line-number="true">
 <div class="pseudocode">
 \begin{algorithm} \caption{Value Iteration for estimating $\pi \approx \pi_*$} \begin{algorithmic} \State \textbf{Hyperparameter:} small threshold $\epsilon &gt; 0$ for the convergence check \State Initialize $V(s)$ arbitrarily for all $s \in \mathcal{S}$, except $V(\text{terminal}) = 0$ \Repeat \State $\Delta \gets 0$ \For{each $s \in \mathcal{S}$} \State $v \gets V(s)$ \State $V(s) \gets \max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \State $\Delta \gets \max(\Delta, |v - V(s)|)$ \EndFor \Until{$\Delta &lt; \epsilon$} \State \textbf{Output} a deterministic policy $\pi \approx \pi_*$ such that \State $\pi(s) = \arg\max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \end{algorithmic} \end{algorithm}
 </div>
@@ -379,7 +383,7 @@ v_\pi(s) &amp;\le q_\pi(s,\pi'(s))\\
 </section>
 <section id="pseudo-code" class="level4">
 <h4 class="anchored" data-anchor-id="pseudo-code">Pseudo Code</h4>
-<div id="algo-policy-iteration" class="pseudocode-container quarto-float" data-line-number="true" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-no-end="false" data-line-number-punc=":" data-pseudocode-number="2" data-indent-size="1.2em" data-indent-lines="false">
+<div id="algo-policy-iteration" class="pseudocode-container quarto-float" data-line-number-punc=":" data-indent-lines="false" data-pseudocode-number="2" data-no-end="false" data-comment-delimiter="//" data-indent-size="1.2em" data-caption-prefix="Algorithm" data-line-number="true">
 <div class="pseudocode">
 \begin{algorithm} \caption{Policy Iteration for estimating $\pi \approx \pi_*$} \begin{algorithmic} \State \textbf{1. Initialization} \State $V(s) \in \mathbb{R}$ and $\pi(s) \in \mathcal{A}(s)$ arbitrarily for all $s \in \mathcal{S}$ \State \State \textbf{2. Policy Evaluation} \Repeat \State $\Delta \gets 0$ \For{each $s \in \mathcal{S}$} \State $v \gets V(s)$ \State $V(s) \gets \sum_{s', r} p(s', r \mid s, \pi(s)) [r + \gamma V(s')]$ \State $\Delta \gets \max(\Delta, |v - V(s)|)$ \EndFor \Until{$\Delta &lt; \epsilon$} \State \State \textbf{3. Policy Improvement} \State $policy-stable \gets \text{true}$ \For{each $s \in \mathcal{S}$} \State $old-action \gets \pi(s)$ \State $\pi(s) \gets \arg\max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \If{$old-action \neq \pi(s)$} \State $policy-stable \gets \text{false}$ \EndIf \EndFor \State \If{$policy-stable$} \State \textbf{stop} and return $V \approx v_*$ and $\pi \approx \pi_*$ \Else \State \textbf{go to 2} \EndIf \end{algorithmic} \end{algorithm}
 </div>
@@ -414,7 +418,13 @@ v_\pi(s) &amp;\le q_\pi(s,\pi'(s))\\
 <ul>
 <li>Dynamic Programming (DP)
 <ul>
-<li>Planning under <strong>model-based</strong> setting using <strong>full-backup</strong>.</li>
+<li><p>Planning under <strong>model-based</strong> setting using <strong>full-backup</strong>.</p></li>
+<li><p>Each iteration updates <strong>every value</strong> in the table using <strong>full backup</strong>.</p></li>
+<li><p>Usually, evaluate <span class="math inline">\(V(s)\)</span> rather than <span class="math inline">\(Q(s,a)\)</span>.</p></li>
+<li><p>Greedy policy improvement over <span class="math inline">\(V(s)\)</span> <strong>requires known MDP</strong>.</p>
+<ul>
+<li><span class="math display">\[\pi_*(s) = \arg\max\limits_a\sum_{s',r} p(s',r | s,a) [r + \gamma V^*(s')]\]</span></li>
+</ul></li>
 </ul></li>
 </ul>
 <!-- -->
@@ -428,8 +438,118 @@ v_\pi(s) &amp;\le q_\pi(s,\pi'(s))\\
 <li>Sarsa</li>
 <li>Q-learning</li>
 </ul></li>
+<li><p>Each iteration updates some values in the table from <strong>sampl backup</strong>.</p></li>
+<li><p>We evaluate <span class="math inline">\(Q(s,a)\)</span> instead of <span class="math inline">\(V(s)\)</span>.</p></li>
+<li><p>Greedy policy improvement over <span class="math inline">\(Q(s,a)\)</span> <strong>works for model-free settings:</strong></p>
+<ul>
+<li><span class="math display">\[\pi'(s)=\arg\max\limits_a Q^{\pi}(s,a)\]</span></li>
+</ul></li>
 </ul></li>
 </ul>
+</section>
+<section id="generalized-policy-iteration-gpi" class="level4">
+<h4 class="anchored" data-anchor-id="generalized-policy-iteration-gpi">Generalized Policy Iteration (GPI)</h4>
+<ul>
+<li><strong>Policy Evaluation</strong> makes the vlaue function “consistent with the current policy”</li>
+<li><strong>Policy Improvement</strong> makes the policy “greedy w.r.t. the current value function” <img src="GPI.png" class="img-fluid" alt="GPI"></li>
+</ul>
+</section>
+</section>
+<section id="monte-carlo-methods" class="level3">
+<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte Carlo Methods</h3>
+<section id="monte-carlo-mc" class="level4">
+<h4 class="anchored" data-anchor-id="monte-carlo-mc">Monte Carlo (MC)</h4>
+<ul>
+<li><p>Repeated random sampling to compute numerical results</p></li>
+<li><p>Tabular updating and model-free method.</p></li>
+<li><p>MC Policy Iteration adapts GPI based on episode-by-episode of PE estimating <span class="math inline">\(Q(s,a)=q_\pi(s,a)\)</span> and e-greedy PI.</p></li>
+<li><p>MC learns from entire trajectory fo sampled episodes, updating after every single episode using real experience.</p></li>
+</ul>
+<p><span class="math display">\[\text{Value} = \text{average of returns } G_t \text{of sampled episodes}\]</span></p>
+<ul>
+<li>MC focuses on a small subset of the states.</li>
+<li>이 방법은 ’Successor value estimates’에 의존하지 않기 때문에 Markov property 위반으로 인한 피해가 적다.</li>
+</ul>
+<p><span class="math display">\[\Rightarrow\text{No bootstrapping}\]</span></p>
+</section>
+<section id="mc-prediction-policy-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="mc-prediction-policy-evaluation">MC Prediction (Policy Evaluation)</h4>
+<ul>
+<li><p>Goal: learn <span class="math inline">\(q_\pi\)</span> from enitre episodes of real experience under policy <span class="math inline">\(\pi\)</span>.</p></li>
+<li><p>MC Policy Evaluation uses <strong>empirical mean return</strong> instead of expected return.</p></li>
+<li><p>To estimate <span class="math inline">\(q_\pi(s,a)\)</span></p>
+<ol type="1">
+<li>For each time step <span class="math inline">\(t\)</span> when state <span class="math inline">\(s\)</span> is visited and action <span class="math inline">\(a\)</span> is taken:
+<ul>
+<li>Increment count: <span class="math inline">\(n(s,a) \gets n(s,a) + 1\)</span></li>
+<li>Increment total return: <span class="math inline">\(S(s,a) \gets S(s,a) + G_t\)</span></li>
+<li>Estimate mean return: <span class="math inline">\(Q(s,a) = S(s,a) / n(s,a)\)</span></li>
+</ul></li>
+</ol></li>
+<li><p>As <span class="math inline">\(n(s,a) \to \infty\)</span>, <span class="math inline">\(Q(s,a) \to q_\pi(s,a)\)</span></p></li>
+</ul>
+</section>
+<section id="incremental-mc-updates" class="level4">
+<h4 class="anchored" data-anchor-id="incremental-mc-updates">Incremental MC updates</h4>
+<ul>
+<li>Incremental Mean
+<ul>
+<li>Partial mean <span class="math inline">\(\mu_k\)</span> of sequence <span class="math inline">\(x_1, x_2, \ldots\)</span> is computed incrementally <span class="math display">\[\mu_k = \frac{1}{k}\sum_{i=1}^k x_i = \mu_{k-1} + \frac{1}{k}(x_k - \mu_{k-1})\]</span></li>
+</ul></li>
+<li>Incremental Monte Carlo Updates
+<ul>
+<li>Increment count: <span class="math inline">\(n(S_t, A_t) \gets n(S_t, A_t) + 1\)</span></li>
+<li>Update rule: <span class="math inline">\(Q(S_t, A_t) \gets Q(S_t, A_t) + \frac{1}{n(S_t, A_t)} [G_t - Q(S_t, A_t)]\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="constant-alpha-mc-policy-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="constant-alpha-mc-policy-evaluation">constant <span class="math inline">\(\alpha\)</span> MC Policy Evaluation</h4>
+<ul>
+<li><p>In practice, a <strong>step-size</strong> <span class="math inline">\(\alpha\)</span> is used <span class="math display">\[Q(S_t, A_t) \gets Q(S_t, A_t) + \alpha [G_t - Q(S_t, A_t)]\]</span></p></li>
+<li><p>Old episodes are exponentially forgotten due to the <span class="math inline">\((1-\alpha)Q(S_t, A_t)\)</span> term.</p></li>
+</ul>
+</section>
+<section id="exploitation-vs-exploration" class="level4">
+<h4 class="anchored" data-anchor-id="exploitation-vs-exploration">Exploitation vs Exploration</h4>
+<ul>
+<li><strong>Exploitation</strong>: making the best decision by using already known information
+<ul>
+<li>By selecting the action with the highest Q-value while sampling new episodes, we can refine our policy efficiently from an alreadly promising region in the state-action space.</li>
+</ul></li>
+<li><strong>Exploration</strong>: searching for new decisions by gathering more information
+<ul>
+<li>By selecting an extra random action while <span class="math inline">\(\epsilon\)</span>-probability while sampling new episodes, we can find a new and maybe more promising region within the state-action space.</li>
+</ul></li>
+<li>To trade-off Exploitation and Exploration, use <strong><span class="math inline">\(\epsilon\)</span>-greedy policy</strong>.</li>
+</ul>
+</section>
+<section id="mc-control-epsilon-greedy-policy-improvement" class="level4">
+<h4 class="anchored" data-anchor-id="mc-control-epsilon-greedy-policy-improvement">MC Control (<span class="math inline">\(\epsilon\)</span>-Greedy Policy Improvement)</h4>
+<ul>
+<li><p>Choose the greedy action with probability <span class="math inline">\(1-\epsilon\)</span> and a random action with probability <span class="math inline">\(\epsilon\)</span>. <span class="math display">\[\epsilon/m \text{ for each of all } m \text{ actions } \Rightarrow \text{stochastic policy}\]</span></p></li>
+<li><p>All actions are selected with non-zero probability for ensuring continual exploration. <span class="math display">\[\pi'(a|s) = \begin{cases}1 - \epsilon + \epsilon/m &amp; \text{if } a=\arg\max_{a'}Q^\pi(s,a') \\ \epsilon/m &amp; \text{otherwise } (m-1 \text{actions})\end{cases}\]</span></p></li>
+<li><p>In full backup DP, Policy Improvement uses <span class="math display">\[\pi'(s) = \arg\max_{a} Q^\pi(s,a) \Rightarrow \text{deterministic policy}\]</span></p></li>
+<li><p>For any <span class="math inline">\(\epsilon\)</span>-greedy policy <span class="math inline">\(\pi\)</span>, <span class="math inline">\(\epsilon\)</span>-greedy policy <span class="math inline">\(\pi'\)</span> with respect to <span class="math inline">\(q_\pi\)</span> is always improved: <span class="math inline">\(v_{\pi'}\ge v_\pi(s)\)</span></p></li>
+</ul>
+</section>
+<section id="greedy-in-limit-with-infinite-exploration-glie" class="level4">
+<h4 class="anchored" data-anchor-id="greedy-in-limit-with-infinite-exploration-glie">Greedy in Limit with Infinite Exploration (GLIE)</h4>
+<ul>
+<li><p>All state-action pairs <span class="math inline">\((s,a)\)</span> are explored infinitely many times: <span class="math display">\[\lim\limits_{k\to\infty}n_k(s,a)=\infty\]</span></p></li>
+<li><p>The learning policy converges to a greedy policy: <span class="math display">\[\lim\limits_{k\to\infty}\pi_k(a|s) = 1 \text{ where } a = \arg\max\limits_{a'}Q_k(s,a')\]</span></p></li>
+<li><p>GLIE MC Control: <span class="math inline">\(\epsilon\)</span>-greedy is GLIE if <span class="math inline">\(\epsilon_k\to 0\)</span> as follows:</p>
+<ul>
+<li><p>In the <span class="math inline">\(k\)</span>-th episode using policy <span class="math inline">\(\pi\)</span>, for each state-action pair <span class="math inline">\((S_t,A_t)\)</span>: <span class="math display">\[n(S_t, A_t) \gets n(S_t, A_t) + 1Q(S_t, A_t) \gets Q(S_t, A_t) + \frac{1}{n(S_t, A_t)} [G_t - Q(S_t, A_t)]\]</span></p></li>
+<li><p>Improve policy based on the new action-value function: <span class="math inline">\(\epsilon=1/k,\pi\gets\epsilon\text{-greedy}(Q)\)</span></p></li>
+</ul></li>
+<li><p>GLIE MC Control converges to the optimal: <span class="math inline">\(Q(s,a)\to q_*(s,a)\)</span></p></li>
+</ul>
+<div id="algo-monte-carlo-method" class="pseudocode-container quarto-float" data-line-number-punc=":" data-indent-lines="false" data-pseudocode-number="3" data-no-end="false" data-comment-delimiter="//" data-indent-size="1.2em" data-caption-prefix="Algorithm" data-line-number="true">
+<div class="pseudocode">
+\begin{algorithm} \caption{Monte Carlo Method} \begin{algorithmic} \State \textbf{1. Initialization} \State $Q(s,a)$, all $S\in\mathcal{S}$, $A\in\mathcal{A}(S)$, arbitrarily and $Q(\text{terminal}, \cdot) = 0$ \State Returns $(S,A) \gets$ empty list \State $\pi \gets$ arbitrarily $\epsilon$-soft policy (non-empty probabilities) \State \State \textbf{2. Repeat for each episode} \Repeat \State (a) Generate an episode using $\pi:S_0, A_0, R_1, S_1, \ldots, S_{T-1}, A_{T-1}, R_T$ \State $G\gets 0$ \State (b) \For{each step of episode, $t=T-1, T-2, \ldots, 0$} \State $G \gets \gamma G + R_{t+1}$ \State Unless $(S_t, A_t)$ appears in $(S_0, A_0), \ldots, (S_{t-1}, A_{t-1})$: ignore this lien for every-visit MC \State Append $G$ to Returns $(S_t, A_t)$ \State $Q(S_t, A_T)\gets$ average(Returns$(S_t, A_t)$) \EndFor \For{each $S_t$ in the episode} \State $A^*\gets\arg\max_{a}Q(S_t,a)$ \For{all $a\in\mathcal{A}(S_t)$} \State $\pi(a|S_t) \gets \begin{cases}1-\epsilon + \epsilon/|\mathcal{A}(S_t)| &amp; \text{if } a=A^* \\ \epsilon/|\mathcal{A}(S_t)| &amp; \text{otherwise}\end{cases}$ \EndFor \EndFor \Until{$\text{forever}$} \end{algorithmic} \end{algorithm}
+</div>
+</div>
 
 
 </section>

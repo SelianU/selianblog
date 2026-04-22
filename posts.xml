@@ -288,7 +288,7 @@
 </section>
 <section id="value-iteration-pseudo-code" class="level4">
 <h4 class="anchored" data-anchor-id="value-iteration-pseudo-code">Value Iteration Pseudo Code</h4>
-<div id="algo-value-iteration" class="pseudocode-container quarto-float" data-line-number="true" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-no-end="false" data-line-number-punc=":" data-pseudocode-number="1" data-indent-size="1.2em" data-indent-lines="false">
+<div id="algo-value-iteration" class="pseudocode-container quarto-float" data-line-number-punc=":" data-indent-lines="false" data-pseudocode-number="1" data-no-end="false" data-comment-delimiter="//" data-indent-size="1.2em" data-caption-prefix="Algorithm" data-line-number="true">
 <div class="pseudocode">
 \begin{algorithm} \caption{Value Iteration for estimating $\pi \approx \pi_*$} \begin{algorithmic} \State \textbf{Hyperparameter:} small threshold $\epsilon &gt; 0$ for the convergence check \State Initialize $V(s)$ arbitrarily for all $s \in \mathcal{S}$, except $V(\text{terminal}) = 0$ \Repeat \State $\Delta \gets 0$ \For{each $s \in \mathcal{S}$} \State $v \gets V(s)$ \State $V(s) \gets \max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \State $\Delta \gets \max(\Delta, |v - V(s)|)$ \EndFor \Until{$\Delta &lt; \epsilon$} \State \textbf{Output} a deterministic policy $\pi \approx \pi_*$ such that \State $\pi(s) = \arg\max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \end{algorithmic} \end{algorithm}
 </div>
@@ -358,7 +358,7 @@
 </section>
 <section id="pseudo-code" class="level4">
 <h4 class="anchored" data-anchor-id="pseudo-code">Pseudo Code</h4>
-<div id="algo-policy-iteration" class="pseudocode-container quarto-float" data-line-number="true" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-no-end="false" data-line-number-punc=":" data-pseudocode-number="2" data-indent-size="1.2em" data-indent-lines="false">
+<div id="algo-policy-iteration" class="pseudocode-container quarto-float" data-line-number-punc=":" data-indent-lines="false" data-pseudocode-number="2" data-no-end="false" data-comment-delimiter="//" data-indent-size="1.2em" data-caption-prefix="Algorithm" data-line-number="true">
 <div class="pseudocode">
 \begin{algorithm} \caption{Policy Iteration for estimating $\pi \approx \pi_*$} \begin{algorithmic} \State \textbf{1. Initialization} \State $V(s) \in \mathbb{R}$ and $\pi(s) \in \mathcal{A}(s)$ arbitrarily for all $s \in \mathcal{S}$ \State \State \textbf{2. Policy Evaluation} \Repeat \State $\Delta \gets 0$ \For{each $s \in \mathcal{S}$} \State $v \gets V(s)$ \State $V(s) \gets \sum_{s', r} p(s', r \mid s, \pi(s)) [r + \gamma V(s')]$ \State $\Delta \gets \max(\Delta, |v - V(s)|)$ \EndFor \Until{$\Delta &lt; \epsilon$} \State \State \textbf{3. Policy Improvement} \State $policy-stable \gets \text{true}$ \For{each $s \in \mathcal{S}$} \State $old-action \gets \pi(s)$ \State $\pi(s) \gets \arg\max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]$ \If{$old-action \neq \pi(s)$} \State $policy-stable \gets \text{false}$ \EndIf \EndFor \State \If{$policy-stable$} \State \textbf{stop} and return $V \approx v_*$ and $\pi \approx \pi_*$ \Else \State \textbf{go to 2} \EndIf \end{algorithmic} \end{algorithm}
 </div>
@@ -393,7 +393,13 @@
 <ul>
 <li>Dynamic Programming (DP)
 <ul>
-<li>Planning under <strong>model-based</strong> setting using <strong>full-backup</strong>.</li>
+<li><p>Planning under <strong>model-based</strong> setting using <strong>full-backup</strong>.</p></li>
+<li><p>Each iteration updates <strong>every value</strong> in the table using <strong>full backup</strong>.</p></li>
+<li><p>Usually, evaluate <img src="https://latex.codecogs.com/png.latex?V(s)"> rather than <img src="https://latex.codecogs.com/png.latex?Q(s,a)">.</p></li>
+<li><p>Greedy policy improvement over <img src="https://latex.codecogs.com/png.latex?V(s)"> <strong>requires known MDP</strong>.</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cpi_*(s)%20=%20%5Carg%5Cmax%5Climits_a%5Csum_%7Bs',r%7D%20p(s',r%20%7C%20s,a)%20%5Br%20+%20%5Cgamma%20V%5E*(s')%5D"></li>
+</ul></li>
 </ul></li>
 </ul>
 <!-- -->
@@ -407,8 +413,118 @@
 <li>Sarsa</li>
 <li>Q-learning</li>
 </ul></li>
+<li><p>Each iteration updates some values in the table from <strong>sampl backup</strong>.</p></li>
+<li><p>We evaluate <img src="https://latex.codecogs.com/png.latex?Q(s,a)"> instead of <img src="https://latex.codecogs.com/png.latex?V(s)">.</p></li>
+<li><p>Greedy policy improvement over <img src="https://latex.codecogs.com/png.latex?Q(s,a)"> <strong>works for model-free settings:</strong></p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cpi'(s)=%5Carg%5Cmax%5Climits_a%20Q%5E%7B%5Cpi%7D(s,a)"></li>
+</ul></li>
 </ul></li>
 </ul>
+</section>
+<section id="generalized-policy-iteration-gpi" class="level4">
+<h4 class="anchored" data-anchor-id="generalized-policy-iteration-gpi">Generalized Policy Iteration (GPI)</h4>
+<ul>
+<li><strong>Policy Evaluation</strong> makes the vlaue function “consistent with the current policy”</li>
+<li><strong>Policy Improvement</strong> makes the policy “greedy w.r.t. the current value function” <img src="https://selianu.github.io/SelianBlog/posts/Reinforcement Learning 2/GPI.png" class="img-fluid" alt="GPI"></li>
+</ul>
+</section>
+</section>
+<section id="monte-carlo-methods" class="level3">
+<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte Carlo Methods</h3>
+<section id="monte-carlo-mc" class="level4">
+<h4 class="anchored" data-anchor-id="monte-carlo-mc">Monte Carlo (MC)</h4>
+<ul>
+<li><p>Repeated random sampling to compute numerical results</p></li>
+<li><p>Tabular updating and model-free method.</p></li>
+<li><p>MC Policy Iteration adapts GPI based on episode-by-episode of PE estimating <img src="https://latex.codecogs.com/png.latex?Q(s,a)=q_%5Cpi(s,a)"> and e-greedy PI.</p></li>
+<li><p>MC learns from entire trajectory fo sampled episodes, updating after every single episode using real experience.</p></li>
+</ul>
+<p><img src="https://latex.codecogs.com/png.latex?%5Ctext%7BValue%7D%20=%20%5Ctext%7Baverage%20of%20returns%20%7D%20G_t%20%5Ctext%7Bof%20sampled%20episodes%7D"></p>
+<ul>
+<li>MC focuses on a small subset of the states.</li>
+<li>이 방법은 ’Successor value estimates’에 의존하지 않기 때문에 Markov property 위반으로 인한 피해가 적다.</li>
+</ul>
+<p><img src="https://latex.codecogs.com/png.latex?%5CRightarrow%5Ctext%7BNo%20bootstrapping%7D"></p>
+</section>
+<section id="mc-prediction-policy-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="mc-prediction-policy-evaluation">MC Prediction (Policy Evaluation)</h4>
+<ul>
+<li><p>Goal: learn <img src="https://latex.codecogs.com/png.latex?q_%5Cpi"> from enitre episodes of real experience under policy <img src="https://latex.codecogs.com/png.latex?%5Cpi">.</p></li>
+<li><p>MC Policy Evaluation uses <strong>empirical mean return</strong> instead of expected return.</p></li>
+<li><p>To estimate <img src="https://latex.codecogs.com/png.latex?q_%5Cpi(s,a)"></p>
+<ol type="1">
+<li>For each time step <img src="https://latex.codecogs.com/png.latex?t"> when state <img src="https://latex.codecogs.com/png.latex?s"> is visited and action <img src="https://latex.codecogs.com/png.latex?a"> is taken:
+<ul>
+<li>Increment count: <img src="https://latex.codecogs.com/png.latex?n(s,a)%20%5Cgets%20n(s,a)%20+%201"></li>
+<li>Increment total return: <img src="https://latex.codecogs.com/png.latex?S(s,a)%20%5Cgets%20S(s,a)%20+%20G_t"></li>
+<li>Estimate mean return: <img src="https://latex.codecogs.com/png.latex?Q(s,a)%20=%20S(s,a)%20/%20n(s,a)"></li>
+</ul></li>
+</ol></li>
+<li><p>As <img src="https://latex.codecogs.com/png.latex?n(s,a)%20%5Cto%20%5Cinfty">, <img src="https://latex.codecogs.com/png.latex?Q(s,a)%20%5Cto%20q_%5Cpi(s,a)"></p></li>
+</ul>
+</section>
+<section id="incremental-mc-updates" class="level4">
+<h4 class="anchored" data-anchor-id="incremental-mc-updates">Incremental MC updates</h4>
+<ul>
+<li>Incremental Mean
+<ul>
+<li>Partial mean <img src="https://latex.codecogs.com/png.latex?%5Cmu_k"> of sequence <img src="https://latex.codecogs.com/png.latex?x_1,%20x_2,%20%5Cldots"> is computed incrementally <img src="https://latex.codecogs.com/png.latex?%5Cmu_k%20=%20%5Cfrac%7B1%7D%7Bk%7D%5Csum_%7Bi=1%7D%5Ek%20x_i%20=%20%5Cmu_%7Bk-1%7D%20+%20%5Cfrac%7B1%7D%7Bk%7D(x_k%20-%20%5Cmu_%7Bk-1%7D)"></li>
+</ul></li>
+<li>Incremental Monte Carlo Updates
+<ul>
+<li>Increment count: <img src="https://latex.codecogs.com/png.latex?n(S_t,%20A_t)%20%5Cgets%20n(S_t,%20A_t)%20+%201"></li>
+<li>Update rule: <img src="https://latex.codecogs.com/png.latex?Q(S_t,%20A_t)%20%5Cgets%20Q(S_t,%20A_t)%20+%20%5Cfrac%7B1%7D%7Bn(S_t,%20A_t)%7D%20%5BG_t%20-%20Q(S_t,%20A_t)%5D"></li>
+</ul></li>
+</ul>
+</section>
+<section id="constant-alpha-mc-policy-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="constant-alpha-mc-policy-evaluation">constant <img src="https://latex.codecogs.com/png.latex?%5Calpha"> MC Policy Evaluation</h4>
+<ul>
+<li><p>In practice, a <strong>step-size</strong> <img src="https://latex.codecogs.com/png.latex?%5Calpha"> is used <img src="https://latex.codecogs.com/png.latex?Q(S_t,%20A_t)%20%5Cgets%20Q(S_t,%20A_t)%20+%20%5Calpha%20%5BG_t%20-%20Q(S_t,%20A_t)%5D"></p></li>
+<li><p>Old episodes are exponentially forgotten due to the <img src="https://latex.codecogs.com/png.latex?(1-%5Calpha)Q(S_t,%20A_t)"> term.</p></li>
+</ul>
+</section>
+<section id="exploitation-vs-exploration" class="level4">
+<h4 class="anchored" data-anchor-id="exploitation-vs-exploration">Exploitation vs Exploration</h4>
+<ul>
+<li><strong>Exploitation</strong>: making the best decision by using already known information
+<ul>
+<li>By selecting the action with the highest Q-value while sampling new episodes, we can refine our policy efficiently from an alreadly promising region in the state-action space.</li>
+</ul></li>
+<li><strong>Exploration</strong>: searching for new decisions by gathering more information
+<ul>
+<li>By selecting an extra random action while <img src="https://latex.codecogs.com/png.latex?%5Cepsilon">-probability while sampling new episodes, we can find a new and maybe more promising region within the state-action space.</li>
+</ul></li>
+<li>To trade-off Exploitation and Exploration, use <strong><img src="https://latex.codecogs.com/png.latex?%5Cepsilon">-greedy policy</strong>.</li>
+</ul>
+</section>
+<section id="mc-control-epsilon-greedy-policy-improvement" class="level4">
+<h4 class="anchored" data-anchor-id="mc-control-epsilon-greedy-policy-improvement">MC Control (<img src="https://latex.codecogs.com/png.latex?%5Cepsilon">-Greedy Policy Improvement)</h4>
+<ul>
+<li><p>Choose the greedy action with probability <img src="https://latex.codecogs.com/png.latex?1-%5Cepsilon"> and a random action with probability <img src="https://latex.codecogs.com/png.latex?%5Cepsilon">. <img src="https://latex.codecogs.com/png.latex?%5Cepsilon/m%20%5Ctext%7B%20for%20each%20of%20all%20%7D%20m%20%5Ctext%7B%20actions%20%7D%20%5CRightarrow%20%5Ctext%7Bstochastic%20policy%7D"></p></li>
+<li><p>All actions are selected with non-zero probability for ensuring continual exploration. <img src="https://latex.codecogs.com/png.latex?%5Cpi'(a%7Cs)%20=%20%5Cbegin%7Bcases%7D1%20-%20%5Cepsilon%20+%20%5Cepsilon/m%20&amp;%20%5Ctext%7Bif%20%7D%20a=%5Carg%5Cmax_%7Ba'%7DQ%5E%5Cpi(s,a')%20%5C%5C%20%5Cepsilon/m%20&amp;%20%5Ctext%7Botherwise%20%7D%20(m-1%20%5Ctext%7Bactions%7D)%5Cend%7Bcases%7D"></p></li>
+<li><p>In full backup DP, Policy Improvement uses <img src="https://latex.codecogs.com/png.latex?%5Cpi'(s)%20=%20%5Carg%5Cmax_%7Ba%7D%20Q%5E%5Cpi(s,a)%20%5CRightarrow%20%5Ctext%7Bdeterministic%20policy%7D"></p></li>
+<li><p>For any <img src="https://latex.codecogs.com/png.latex?%5Cepsilon">-greedy policy <img src="https://latex.codecogs.com/png.latex?%5Cpi">, <img src="https://latex.codecogs.com/png.latex?%5Cepsilon">-greedy policy <img src="https://latex.codecogs.com/png.latex?%5Cpi'"> with respect to <img src="https://latex.codecogs.com/png.latex?q_%5Cpi"> is always improved: <img src="https://latex.codecogs.com/png.latex?v_%7B%5Cpi'%7D%5Cge%20v_%5Cpi(s)"></p></li>
+</ul>
+</section>
+<section id="greedy-in-limit-with-infinite-exploration-glie" class="level4">
+<h4 class="anchored" data-anchor-id="greedy-in-limit-with-infinite-exploration-glie">Greedy in Limit with Infinite Exploration (GLIE)</h4>
+<ul>
+<li><p>All state-action pairs <img src="https://latex.codecogs.com/png.latex?(s,a)"> are explored infinitely many times: <img src="https://latex.codecogs.com/png.latex?%5Clim%5Climits_%7Bk%5Cto%5Cinfty%7Dn_k(s,a)=%5Cinfty"></p></li>
+<li><p>The learning policy converges to a greedy policy: <img src="https://latex.codecogs.com/png.latex?%5Clim%5Climits_%7Bk%5Cto%5Cinfty%7D%5Cpi_k(a%7Cs)%20=%201%20%5Ctext%7B%20where%20%7D%20a%20=%20%5Carg%5Cmax%5Climits_%7Ba'%7DQ_k(s,a')"></p></li>
+<li><p>GLIE MC Control: <img src="https://latex.codecogs.com/png.latex?%5Cepsilon">-greedy is GLIE if <img src="https://latex.codecogs.com/png.latex?%5Cepsilon_k%5Cto%200"> as follows:</p>
+<ul>
+<li><p>In the <img src="https://latex.codecogs.com/png.latex?k">-th episode using policy <img src="https://latex.codecogs.com/png.latex?%5Cpi">, for each state-action pair <img src="https://latex.codecogs.com/png.latex?(S_t,A_t)">: <img src="https://latex.codecogs.com/png.latex?n(S_t,%20A_t)%20%5Cgets%20n(S_t,%20A_t)%20+%201Q(S_t,%20A_t)%20%5Cgets%20Q(S_t,%20A_t)%20+%20%5Cfrac%7B1%7D%7Bn(S_t,%20A_t)%7D%20%5BG_t%20-%20Q(S_t,%20A_t)%5D"></p></li>
+<li><p>Improve policy based on the new action-value function: <img src="https://latex.codecogs.com/png.latex?%5Cepsilon=1/k,%5Cpi%5Cgets%5Cepsilon%5Ctext%7B-greedy%7D(Q)"></p></li>
+</ul></li>
+<li><p>GLIE MC Control converges to the optimal: <img src="https://latex.codecogs.com/png.latex?Q(s,a)%5Cto%20q_*(s,a)"></p></li>
+</ul>
+<div id="algo-monte-carlo-method" class="pseudocode-container quarto-float" data-line-number-punc=":" data-indent-lines="false" data-pseudocode-number="3" data-no-end="false" data-comment-delimiter="//" data-indent-size="1.2em" data-caption-prefix="Algorithm" data-line-number="true">
+<div class="pseudocode">
+\begin{algorithm} \caption{Monte Carlo Method} \begin{algorithmic} \State \textbf{1. Initialization} \State $Q(s,a)$, all $S\in\mathcal{S}$, $A\in\mathcal{A}(S)$, arbitrarily and $Q(\text{terminal}, \cdot) = 0$ \State Returns $(S,A) \gets$ empty list \State $\pi \gets$ arbitrarily $\epsilon$-soft policy (non-empty probabilities) \State \State \textbf{2. Repeat for each episode} \Repeat \State (a) Generate an episode using $\pi:S_0, A_0, R_1, S_1, \ldots, S_{T-1}, A_{T-1}, R_T$ \State $G\gets 0$ \State (b) \For{each step of episode, $t=T-1, T-2, \ldots, 0$} \State $G \gets \gamma G + R_{t+1}$ \State Unless $(S_t, A_t)$ appears in $(S_0, A_0), \ldots, (S_{t-1}, A_{t-1})$: ignore this lien for every-visit MC \State Append $G$ to Returns $(S_t, A_t)$ \State $Q(S_t, A_T)\gets$ average(Returns$(S_t, A_t)$) \EndFor \For{each $S_t$ in the episode} \State $A^*\gets\arg\max_{a}Q(S_t,a)$ \For{all $a\in\mathcal{A}(S_t)$} \State $\pi(a|S_t) \gets \begin{cases}1-\epsilon + \epsilon/|\mathcal{A}(S_t)| &amp; \text{if } a=A^* \\ \epsilon/|\mathcal{A}(S_t)| &amp; \text{otherwise}\end{cases}$ \EndFor \EndFor \Until{$\text{forever}$} \end{algorithmic} \end{algorithm}
+</div>
+</div>
 
 
 </section>
@@ -419,7 +535,7 @@
   <category>RL</category>
   <guid>https://selianu.github.io/SelianBlog/posts/Reinforcement Learning 2/</guid>
   <pubDate>Tue, 14 Apr 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://selianu.github.io/SelianBlog/posts/Reinforcement Learning 2" medium="image"/>
+  <media:content url="https://selianu.github.io/SelianBlog/posts/Reinforcement Learning 2/GPI.png" medium="image" type="image/png" height="49" width="144"/>
 </item>
 </channel>
 </rss>
